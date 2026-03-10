@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>You're In — The Discard</title>
+  <meta name="description" content="Welcome to The Discard. Download your free Mahjong Beginner's Cheat Sheet.">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Montserrat:wght@300;400;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --jade:        #3D7A5F;
+      --forest:      #1C3A2E;
+      --forest-dark: #142B21;
+      --cream:       #F5EDD8;
+      --terra:       #C4623A;
+      --gold:        #B8924A;
+      --jade2:       #5BAE8A;
+      --white:       #ffffff;
+      --text:        #2A2A2A;
+    }
+
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', sans-serif;
+      color: var(--text);
+      line-height: 1.7;
+      background: var(--white);
+      -webkit-font-smoothing: antialiased;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* NAV */
+    .nav {
+      background: var(--forest);
+      border-bottom: 1px solid rgba(184,146,74,0.25);
+      padding: 0 40px;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-shrink: 0;
+    }
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+    }
+    .nav-tile {
+      width: 32px;
+      height: 42px;
+    }
+    .nav-wordmark {
+      display: flex;
+      flex-direction: column;
+      line-height: 1.1;
+    }
+    .nav-the {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 800;
+      font-size: 11px;
+      color: var(--cream);
+      letter-spacing: 3px;
+      text-transform: uppercase;
+    }
+    .nav-discard {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 300;
+      font-size: 15px;
+      color: var(--gold);
+      letter-spacing: 5px;
+      text-transform: uppercase;
+    }
+
+    /* HERO */
+    .hero {
+      background: linear-gradient(160deg, var(--forest) 0%, #254d3a 60%, var(--jade) 100%);
+      padding: 80px 40px 100px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      flex: 1;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at 30% 50%, rgba(61,122,95,0.3) 0%, transparent 60%),
+                  radial-gradient(ellipse at 80% 20%, rgba(184,146,74,0.1) 0%, transparent 50%);
+      pointer-events: none;
+    }
+
+    .hero-inner {
+      position: relative;
+      max-width: 680px;
+      margin: 0 auto;
+    }
+
+    /* Confirmation badge */
+    .confirm-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(61,122,95,0.35);
+      border: 1px solid rgba(91,174,138,0.4);
+      border-radius: 100px;
+      padding: 6px 18px;
+      margin-bottom: 36px;
+    }
+    .confirm-badge-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--jade2);
+      animation: pulse 2s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+    .confirm-badge-text {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 600;
+      font-size: 11px;
+      color: var(--jade2);
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+    }
+
+    .hero h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(38px, 6vw, 62px);
+      font-weight: 900;
+      color: var(--cream);
+      line-height: 1.1;
+      margin-bottom: 20px;
+    }
+    .hero h1 em {
+      font-style: italic;
+      color: var(--gold);
+    }
+
+    .hero-sub {
+      font-family: 'Inter', sans-serif;
+      font-size: 18px;
+      color: rgba(245,237,216,0.75);
+      max-width: 480px;
+      margin: 0 auto 48px;
+      line-height: 1.6;
+    }
+
+    /* Download card */
+    .download-card {
+      background: var(--cream);
+      border-radius: 16px;
+      padding: 36px 40px;
+      max-width: 520px;
+      margin: 0 auto 48px;
+      display: flex;
+      align-items: center;
+      gap: 28px;
+      text-align: left;
+    }
+    .download-icon {
+      flex-shrink: 0;
+      width: 64px;
+      height: 64px;
+    }
+    .download-text h3 {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 700;
+      font-size: 14px;
+      color: var(--forest);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+    .download-text p {
+      font-size: 14px;
+      color: rgba(28,58,46,0.65);
+      margin-bottom: 16px;
+      line-height: 1.5;
+    }
+    .btn-download {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--forest);
+      color: var(--cream);
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 700;
+      font-size: 12px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      text-decoration: none;
+      padding: 12px 24px;
+      border-radius: 8px;
+      transition: background 0.2s;
+    }
+    .btn-download:hover { background: var(--jade); }
+    .btn-download svg { flex-shrink: 0; }
+
+    /* Email reminder */
+    .email-note {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      color: rgba(245,237,216,0.55);
+      font-size: 14px;
+      margin-bottom: 60px;
+    }
+    .email-note svg { flex-shrink: 0; opacity: 0.6; }
+
+    /* What's next section */
+    .whats-next {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(245,237,216,0.12);
+      border-radius: 16px;
+      padding: 36px 40px;
+      max-width: 520px;
+      margin: 0 auto;
+      text-align: left;
+    }
+    .whats-next h2 {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 700;
+      font-size: 11px;
+      color: var(--gold);
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+    }
+    .next-item {
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+      margin-bottom: 18px;
+    }
+    .next-item:last-child { margin-bottom: 0; }
+    .next-num {
+      flex-shrink: 0;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: rgba(61,122,95,0.4);
+      border: 1px solid rgba(91,174,138,0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 700;
+      font-size: 12px;
+      color: var(--jade2);
+      margin-top: 1px;
+    }
+    .next-text strong {
+      display: block;
+      font-family: 'Inter', sans-serif;
+      font-weight: 600;
+      font-size: 15px;
+      color: var(--cream);
+      margin-bottom: 2px;
+    }
+    .next-text span {
+      font-size: 14px;
+      color: rgba(245,237,216,0.55);
+      line-height: 1.5;
+    }
+
+    /* FOOTER */
+    .footer {
+      background: var(--forest-dark);
+      padding: 28px 40px;
+      text-align: center;
+      flex-shrink: 0;
+    }
+    .footer p {
+      font-size: 13px;
+      color: rgba(245,237,216,0.35);
+      font-family: 'Montserrat', sans-serif;
+      letter-spacing: 1px;
+    }
+
+    @media (max-width: 560px) {
+      .nav { padding: 0 20px; }
+      .hero { padding: 60px 20px 80px; }
+      .download-card {
+        flex-direction: column;
+        text-align: center;
+        padding: 28px 24px;
+        gap: 16px;
+      }
+      .whats-next { padding: 28px 24px; }
+      .footer { padding: 24px 20px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav class="nav">
+    <a href="/" class="nav-logo">
+      <svg class="nav-tile" viewBox="0 0 66 88" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="4" y="0" width="58" height="76" rx="8" fill="#1C3A2E"/>
+        <rect x="4" y="0" width="58" height="6" rx="4" fill="#B8924A"/>
+        <rect x="4" y="4" width="58" height="4" fill="#B8924A"/>
+        <circle cx="33" cy="22" r="9" fill="none" stroke="#B8924A" stroke-width="2.5"/>
+        <circle cx="33" cy="22" r="4" fill="#1C3A2E"/>
+        <circle cx="33" cy="42" r="9" fill="none" stroke="#3D7A5F" stroke-width="2" opacity="0.9"/>
+        <circle cx="33" cy="42" r="4" fill="#1C3A2E"/>
+        <circle cx="33" cy="62" r="9" fill="none" stroke="#B8924A" stroke-width="2.5" opacity="0.5"/>
+        <circle cx="33" cy="62" r="4" fill="#1C3A2E"/>
+      </svg>
+      <div class="nav-wordmark">
+        <span class="nav-the">The</span>
+        <span class="nav-discard">Discard</span>
+      </div>
+    </a>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-inner">
+
+      <div class="confirm-badge">
+        <div class="confirm-badge-dot"></div>
+        <span class="confirm-badge-text">You're subscribed</span>
+      </div>
+
+      <h1>Ready to pick up<br>what we're throwing <em>down?</em></h1>
+
+      <p class="hero-sub">
+        Your cheat sheet is ready. Download it, print it, keep it at the table —
+        and watch for your first issue soon.
+      </p>
+
+      <!-- Download card -->
+      <div class="download-card">
+        <svg class="download-icon" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="4" y="0" width="56" height="64" rx="8" fill="#1C3A2E"/>
+          <rect x="4" y="0" width="56" height="6" rx="4" fill="#B8924A"/>
+          <rect x="4" y="4" width="56" height="4" fill="#B8924A"/>
+          <rect x="14" y="18" width="36" height="3" rx="1.5" fill="#3D7A5F" opacity="0.7"/>
+          <rect x="14" y="26" width="28" height="3" rx="1.5" fill="#3D7A5F" opacity="0.5"/>
+          <rect x="14" y="34" width="32" height="3" rx="1.5" fill="#3D7A5F" opacity="0.5"/>
+          <rect x="14" y="42" width="20" height="3" rx="1.5" fill="#B8924A" opacity="0.6"/>
+          <rect x="14" y="50" width="36" height="3" rx="1.5" fill="#3D7A5F" opacity="0.3"/>
+        </svg>
+        <div class="download-text">
+          <h3>Beginner's Cheat Sheet</h3>
+          <p>Tile sets, scoring basics, etiquette, and everything you need to sit down and play.</p>
+          <a href="/cheat-sheet.html" class="btn-download" target="_blank">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+              <path d="M7 1v8M4 6l3 3 3-3M1 11h12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            Download Cheat Sheet
+          </a>
+        </div>
+      </div>
+
+      <!-- Email reminder -->
+      <div class="email-note">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <rect x="1" y="3" width="14" height="10" rx="2" stroke="currentColor" stroke-width="1.4"/>
+          <path d="M1 5.5l7 4.5 7-4.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+        </svg>
+        Check your inbox — a welcome email with this link is on its way too.
+      </div>
+
+      <!-- What's next -->
+      <div class="whats-next">
+        <h2>What happens next</h2>
+        <div class="next-item">
+          <div class="next-num">1</div>
+          <div class="next-text">
+            <strong>Confirm your email</strong>
+            <span>Look for a confirmation message and click the link to make sure your issues land in your inbox.</span>
+          </div>
+        </div>
+        <div class="next-item">
+          <div class="next-num">2</div>
+          <div class="next-text">
+            <strong>Get your first issue</strong>
+            <span>The Discard comes weekly. We cover rules, etiquette, strategy, and a little culture — no experience needed.</span>
+          </div>
+        </div>
+        <div class="next-item">
+          <div class="next-num">3</div>
+          <div class="next-text">
+            <strong>Bring the cheat sheet to the table</strong>
+            <span>Print it out or pull it up on your phone. It covers everything you need to play your first hand.</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <p>&copy; 2025 The Discard</p>
+  </footer>
+
+</body>
+</html>
