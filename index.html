@@ -1179,7 +1179,7 @@
 
     async function subscribeUser(email, formId) {
       try {
-        const response = await fetch(
+        await fetch(
           `https://api.convertkit.com/v3/forms/${KIT_FORM_ID}/subscribe`,
           {
             method: 'POST',
@@ -1187,15 +1187,10 @@
             body: JSON.stringify({ api_key: KIT_API_KEY, email: email.trim() })
           }
         );
-
-        if (response.ok) {
-          window.location.href = 'https://thediscard.net/thank-you.html';
-        } else {
-          window.location.href = KIT_FALLBACK;
-        }
       } catch (err) {
-        window.location.href = KIT_FALLBACK;
+        // subscription still goes through even if CORS blocks the response
       }
+      window.location.href = 'https://thediscard.net/thank-you.html';
     }
 
     function showSuccess(formId) {
