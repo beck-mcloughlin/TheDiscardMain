@@ -580,20 +580,9 @@
       flex-shrink: 0;
     }
 
-    .btn-cheatsheet-green {
-      display: inline-block;
-      font-family: 'Montserrat', sans-serif;
-      font-weight: 700;
-      font-size: 13px;
-      letter-spacing: 0.5px;
-      padding: 15px 30px;
-      border-radius: 8px;
-      background: var(--cream);
-      color: var(--forest);
-      text-decoration: none;
-      cursor: pointer;
-      border: none;
-      transition: background 0.2s, transform 0.1s;
+    .cheatsheet-success {
+      background: rgba(255,255,255,0.12);
+      border-color: rgba(245,237,216,0.3);
     }
 
     .btn-cheatsheet-green:hover { background: var(--white); transform: translateY(-1px); }
@@ -875,22 +864,21 @@
 
       <!-- Left Column -->
       <div class="hero-left">
-        <p class="hero-eyebrow">Free Beginner's Cheat Sheet Included</p>
-        <h1 class="hero-h1">Finally understand what's happening at the Mahjong table.</h1>
-        <p class="hero-sub">The Discard is a weekly newsletter for people learning Mahjong — and for anyone who wants to understand it the way the people who love it do. Rules, etiquette, culture, and strategy. No prior experience needed.</p>
+        <p class="hero-eyebrow">Free Download &middot; No Experience Needed</p>
+        <h1 class="hero-h1">The cheat sheet that makes your first Mahjong game make sense.</h1>
+        <p class="hero-sub">4 pages. Every tile, every set, every rule you actually need — plus table etiquette so you don't embarrass yourself. Yours free. And once you're hooked, The Discard weekly newsletter goes even deeper.</p>
 
         <!-- Form -->
         <form class="subscribe-form" id="hero-form" onsubmit="handleHeroSubmit(event)" novalidate>
           <input type="email" id="hero-email" placeholder="Your email address" autocomplete="email" aria-label="Email address">
-          <button type="submit" class="btn-subscribe">Subscribe Free &rarr;</button>
+          <button type="submit" class="btn-subscribe">Get My Free Cheat Sheet &rarr;</button>
         </form>
         <p class="form-error" id="hero-error">Please enter a valid email address.</p>
-        <p class="form-note">Free to start &middot; No spam &middot; Unsubscribe anytime</p>
+        <p class="form-note">Free forever &middot; No spam &middot; Unsubscribe anytime</p>
 
         <!-- Success state (hidden until subscription) -->
         <div class="subscribe-success" id="hero-success" role="alert">
-          <p>You're in! Check your email to confirm your subscription, then grab your free cheat sheet below.</p>
-          <!-- Update this path to your hosted cheat sheet URL or PDF -->
+          <p>You're in! Check your email to confirm, then grab your free cheat sheet below.</p>
           <a href="./cheat-sheet.html" target="_blank" class="btn-cheatsheet">Download Your Cheat Sheet &rarr;</a>
         </div>
       </div>
@@ -1029,7 +1017,16 @@
           <li>How a round works, step by step</li>
           <li>Table etiquette and key vocabulary</li>
         </ul>
-        <button class="btn-cheatsheet-green" onclick="scrollToSubscribe()">Get Your Free Copy &rarr;</button>
+        <form class="subscribe-form" id="cs-form" onsubmit="handleCsSubmit(event)" novalidate>
+          <input type="email" id="cs-email" placeholder="Your email address" autocomplete="email" aria-label="Email address">
+          <button type="submit" class="btn-subscribe">Get My Free Copy &rarr;</button>
+        </form>
+        <p class="form-error" id="cs-error">Please enter a valid email address.</p>
+        <p class="form-note">Free forever &middot; No spam &middot; Unsubscribe anytime</p>
+        <div class="subscribe-success cheatsheet-success" id="cs-success" role="alert">
+          <p>You're in! Check your email to confirm, then download your cheat sheet below.</p>
+          <a href="./cheat-sheet.html" target="_blank" class="btn-cheatsheet">Download Your Cheat Sheet &rarr;</a>
+        </div>
       </div>
 
       <!-- Large mockup -->
@@ -1224,6 +1221,22 @@
 
       errorEl.style.display = 'none';
       subscribeUser(email, 'hero');
+    }
+
+    function handleCsSubmit(event) {
+      event.preventDefault();
+      const emailInput = document.getElementById('cs-email');
+      const errorEl    = document.getElementById('cs-error');
+      const email      = emailInput.value;
+
+      if (!isValidEmail(email)) {
+        errorEl.style.display = 'block';
+        emailInput.focus();
+        return;
+      }
+
+      errorEl.style.display = 'none';
+      subscribeUser(email, 'cs');
     }
 
     function handleBottomSubmit(event) {
