@@ -1,0 +1,1260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Discard — A Mahjong Newsletter</title>
+  <meta name="description" content="The Discard is a weekly newsletter for people learning Mahjong. Rules, etiquette, culture, and strategy — no prior experience needed. Subscribe free and get the Beginner's Cheat Sheet.">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Montserrat:wght@300;400;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    /* =============================================
+       DESIGN TOKENS
+    ============================================= */
+    :root {
+      --jade:   #3D7A5F;
+      --forest: #1C3A2E;
+      --cream:  #F5EDD8;
+      --terra:  #C4623A;
+      --gold:   #B8924A;
+      --jade2:  #5BAE8A;
+      --white:  #ffffff;
+      --text:   #2A2A2A;
+      --forest-dark: #142B21;
+    }
+
+    /* =============================================
+       RESET & BASE
+    ============================================= */
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      color: var(--text);
+      line-height: 1.7;
+      background: var(--white);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    img { max-width: 100%; display: block; }
+
+    /* =============================================
+       STICKY NAV
+    ============================================= */
+    .nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--forest);
+      border-bottom: 1px solid rgba(184, 146, 74, 0.25);
+      padding: 0 40px;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+    }
+
+    .nav-wordmark {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 800;
+      font-size: 13px;
+      letter-spacing: 3.5px;
+      text-transform: uppercase;
+      color: var(--cream);
+      line-height: 1;
+    }
+
+    .nav-wordmark span {
+      display: block;
+      font-weight: 300;
+      font-size: 8px;
+      letter-spacing: 3px;
+      color: var(--gold);
+      margin-top: 3px;
+    }
+
+    .btn-nav {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 700;
+      font-size: 11px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--forest);
+      background: var(--gold);
+      border: none;
+      border-radius: 40px;
+      padding: 10px 22px;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+      transition: background 0.2s, transform 0.1s;
+    }
+
+    .btn-nav:hover { background: #c9a05a; transform: translateY(-1px); }
+
+    /* =============================================
+       HERO SECTION
+    ============================================= */
+    #subscribe {
+      background: var(--forest);
+      background-image: linear-gradient(105deg, rgba(61, 122, 95, 0.22) 0%, transparent 55%);
+      border-top: 4px solid var(--gold);
+      padding: 96px 40px 100px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Subtle decorative radial behind left column */
+    #subscribe::before {
+      content: '';
+      position: absolute;
+      left: -120px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 600px;
+      height: 600px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(91, 174, 138, 0.09) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero-inner {
+      max-width: 1120px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 60% 40%;
+      gap: 64px;
+      align-items: center;
+    }
+
+    .hero-eyebrow {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .hero-eyebrow::before {
+      content: '';
+      display: inline-block;
+      width: 28px;
+      height: 2px;
+      background: var(--gold);
+      flex-shrink: 0;
+    }
+
+    .hero-h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(36px, 4.5vw, 56px);
+      font-weight: 900;
+      color: var(--cream);
+      line-height: 1.15;
+      margin-bottom: 24px;
+      letter-spacing: -0.5px;
+    }
+
+    .hero-sub {
+      font-size: 17px;
+      line-height: 1.75;
+      color: rgba(245, 237, 216, 0.75);
+      margin-bottom: 40px;
+      max-width: 520px;
+    }
+
+    /* ---- Form ---- */
+    .subscribe-form {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 14px;
+      flex-wrap: wrap;
+    }
+
+    .subscribe-form input[type="email"] {
+      flex: 1;
+      min-width: 220px;
+      font-family: 'Inter', sans-serif;
+      font-size: 15px;
+      padding: 14px 18px;
+      border-radius: 8px;
+      border: 1.5px solid rgba(245, 237, 216, 0.2);
+      background: rgba(255, 255, 255, 0.07);
+      color: var(--cream);
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .subscribe-form input[type="email"]::placeholder { color: rgba(245, 237, 216, 0.4); }
+    .subscribe-form input[type="email"]:focus { border-color: var(--gold); background: rgba(255,255,255,0.10); }
+
+    .btn-subscribe {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 700;
+      font-size: 13px;
+      letter-spacing: 0.5px;
+      padding: 14px 26px;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      background: var(--gold);
+      color: var(--forest);
+      white-space: nowrap;
+      transition: background 0.2s, transform 0.1s;
+    }
+
+    .btn-subscribe:hover { background: #c9a05a; transform: translateY(-1px); }
+
+    .form-note {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 11px;
+      color: rgba(245, 237, 216, 0.45);
+      letter-spacing: 0.5px;
+    }
+
+    .form-error {
+      font-size: 13px;
+      color: #e07b5a;
+      margin-top: 8px;
+      display: none;
+    }
+
+    /* ---- Success State ---- */
+    .subscribe-success {
+      display: none;
+      background: rgba(61, 122, 95, 0.2);
+      border: 1px solid rgba(91, 174, 138, 0.4);
+      border-radius: 12px;
+      padding: 28px 32px;
+    }
+
+    .subscribe-success p {
+      color: var(--cream);
+      font-size: 16px;
+      line-height: 1.6;
+      margin-bottom: 20px;
+    }
+
+    .btn-cheatsheet {
+      display: inline-block;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 700;
+      font-size: 13px;
+      letter-spacing: 0.5px;
+      padding: 14px 28px;
+      border-radius: 8px;
+      background: var(--cream);
+      color: var(--forest);
+      text-decoration: none;
+      transition: background 0.2s;
+    }
+
+    .btn-cheatsheet:hover { background: var(--white); }
+
+    /* ---- Cheat Sheet Mockup (Hero) ---- */
+    .hero-visual {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+    }
+
+    .mockup-stack {
+      position: relative;
+      width: 280px;
+      height: 360px;
+    }
+
+    .mockup-page {
+      position: absolute;
+      width: 240px;
+      background: var(--white);
+      border-radius: 10px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.35);
+      overflow: hidden;
+    }
+
+    .mockup-page-back {
+      top: 24px;
+      left: 30px;
+      transform: rotate(5deg);
+      opacity: 0.85;
+    }
+
+    .mockup-page-front {
+      top: 0;
+      left: 0;
+      transform: rotate(-2deg);
+      z-index: 2;
+    }
+
+    .mockup-header {
+      background: var(--forest);
+      border-top: 3px solid var(--gold);
+      padding: 10px 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .mockup-header-text {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 800;
+      font-size: 8px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--cream);
+      line-height: 1;
+    }
+
+    .mockup-header-text span {
+      display: block;
+      font-weight: 300;
+      font-size: 6px;
+      color: var(--gold);
+      margin-top: 2px;
+    }
+
+    .mockup-body {
+      padding: 14px 14px 16px;
+      background: var(--cream);
+    }
+
+    .mockup-title-bar {
+      font-family: 'Playfair Display', serif;
+      font-size: 9px;
+      font-weight: 700;
+      color: var(--forest);
+      margin-bottom: 8px;
+      padding-bottom: 6px;
+      border-bottom: 1px solid rgba(28,58,46,0.15);
+    }
+
+    .mockup-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 5px;
+    }
+
+    .mockup-tile {
+      font-size: 14px;
+      line-height: 1;
+    }
+
+    .mockup-line {
+      height: 5px;
+      border-radius: 3px;
+      background: rgba(28,58,46,0.12);
+      flex: 1;
+    }
+
+    .mockup-line-short { max-width: 60%; }
+    .mockup-line-mid   { max-width: 80%; }
+
+    .mockup-section-label {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 5.5px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin: 8px 0 4px;
+    }
+
+    /* Gold FREE badge */
+    .mockup-badge {
+      position: absolute;
+      top: -10px;
+      right: -10px;
+      z-index: 10;
+      width: 52px;
+      height: 52px;
+      background: var(--gold);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 800;
+      font-size: 10px;
+      letter-spacing: 1px;
+      color: var(--forest);
+      box-shadow: 0 4px 14px rgba(184, 146, 74, 0.55);
+      border: 2px solid var(--white);
+    }
+
+    /* =============================================
+       BENEFITS STRIP
+    ============================================= */
+    .benefits {
+      background: var(--cream);
+      border-top: 2px solid rgba(184, 146, 74, 0.35);
+      border-bottom: 2px solid rgba(184, 146, 74, 0.35);
+      padding: 32px 40px;
+    }
+
+    .benefits-inner {
+      max-width: 1120px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 24px;
+    }
+
+    .benefit-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+    }
+
+    .benefit-icon {
+      font-size: 22px;
+      line-height: 1;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .benefit-text {
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      line-height: 1.55;
+      color: var(--text);
+    }
+
+    .benefit-text strong {
+      display: block;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 700;
+      font-size: 12px;
+      letter-spacing: 0.3px;
+      color: var(--forest);
+      margin-bottom: 2px;
+    }
+
+    /* =============================================
+       ABOUT SECTION
+    ============================================= */
+    .about {
+      background: var(--white);
+      padding: 100px 40px;
+    }
+
+    .about-inner {
+      max-width: 1120px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 72px;
+      align-items: start;
+    }
+
+    .about-left h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(28px, 3vw, 40px);
+      font-weight: 700;
+      color: var(--forest);
+      line-height: 1.25;
+      margin-bottom: 28px;
+    }
+
+    .about-left p {
+      font-size: 16px;
+      line-height: 1.8;
+      color: #444;
+      margin-bottom: 20px;
+    }
+
+    .about-left p:last-child { margin-bottom: 0; }
+
+    .pillar-cards {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .pillar-card {
+      border-radius: 10px;
+      padding: 24px 26px;
+      background: var(--white);
+      box-shadow: 0 2px 16px rgba(0,0,0,0.06);
+      border-left: 4px solid var(--jade);
+    }
+
+    .pillar-card.gold  { border-left-color: var(--gold); }
+    .pillar-card.terra { border-left-color: var(--terra); }
+
+    .pillar-card h3 {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 700;
+      font-size: 13px;
+      letter-spacing: 0.5px;
+      color: var(--forest);
+      margin-bottom: 6px;
+    }
+
+    .pillar-card p {
+      font-size: 14px;
+      line-height: 1.6;
+      color: #555;
+    }
+
+    /* =============================================
+       CHEAT SHEET CALLOUT
+    ============================================= */
+    .cheatsheet {
+      background: var(--jade);
+      padding: 96px 40px;
+    }
+
+    .cheatsheet-inner {
+      max-width: 1120px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 55% 45%;
+      gap: 64px;
+      align-items: center;
+    }
+
+    .cheatsheet-label {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 16px;
+    }
+
+    .cheatsheet h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(30px, 3vw, 44px);
+      font-weight: 700;
+      color: var(--cream);
+      line-height: 1.2;
+      margin-bottom: 16px;
+    }
+
+    .cheatsheet-sub {
+      font-size: 16px;
+      line-height: 1.75;
+      color: rgba(245, 237, 216, 0.8);
+      margin-bottom: 28px;
+    }
+
+    .cheatsheet-list {
+      list-style: none;
+      margin-bottom: 36px;
+    }
+
+    .cheatsheet-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      font-size: 15px;
+      line-height: 1.55;
+      color: rgba(245, 237, 216, 0.9);
+      padding: 6px 0;
+      border-bottom: 1px solid rgba(245, 237, 216, 0.1);
+    }
+
+    .cheatsheet-list li:last-child { border-bottom: none; }
+
+    .cheatsheet-list li::before {
+      content: '→';
+      color: var(--gold);
+      font-size: 13px;
+      margin-top: 2px;
+      flex-shrink: 0;
+    }
+
+    .btn-cheatsheet-green {
+      display: inline-block;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 700;
+      font-size: 13px;
+      letter-spacing: 0.5px;
+      padding: 15px 30px;
+      border-radius: 8px;
+      background: var(--cream);
+      color: var(--forest);
+      text-decoration: none;
+      cursor: pointer;
+      border: none;
+      transition: background 0.2s, transform 0.1s;
+    }
+
+    .btn-cheatsheet-green:hover { background: var(--white); transform: translateY(-1px); }
+
+    /* Large mockup on right */
+    .cheatsheet-visual {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .mockup-stack-lg {
+      position: relative;
+      width: 320px;
+      height: 420px;
+    }
+
+    .mockup-stack-lg .mockup-page {
+      width: 280px;
+    }
+
+    .mockup-stack-lg .mockup-page-back {
+      top: 30px;
+      left: 34px;
+    }
+
+    /* =============================================
+       EACH ISSUE SECTION
+    ============================================= */
+    .each-issue {
+      background: var(--cream);
+      padding: 100px 40px;
+    }
+
+    .each-issue-inner {
+      max-width: 1120px;
+      margin: 0 auto;
+    }
+
+    .section-heading {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(28px, 3vw, 40px);
+      font-weight: 700;
+      color: var(--forest);
+      text-align: center;
+      margin-bottom: 56px;
+    }
+
+    .issue-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+
+    .issue-card {
+      background: var(--white);
+      border-radius: 12px;
+      padding: 32px 28px;
+      box-shadow: 0 2px 16px rgba(0,0,0,0.05);
+      border-top: 3px solid var(--jade);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .issue-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 28px rgba(0,0,0,0.09);
+    }
+
+    .issue-card:nth-child(2) { border-top-color: var(--gold); }
+    .issue-card:nth-child(3) { border-top-color: var(--terra); }
+    .issue-card:nth-child(4) { border-top-color: var(--jade2); }
+    .issue-card:nth-child(5) { border-top-color: var(--forest); }
+    .issue-card:nth-child(6) { border-top-color: var(--gold); }
+
+    .issue-card h3 {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 700;
+      font-size: 14px;
+      letter-spacing: 0.3px;
+      color: var(--forest);
+      margin-bottom: 10px;
+    }
+
+    .issue-card p {
+      font-size: 14px;
+      line-height: 1.65;
+      color: #555;
+    }
+
+    /* =============================================
+       FINAL CTA
+    ============================================= */
+    .final-cta {
+      background: var(--forest);
+      background-image: linear-gradient(135deg, rgba(61, 122, 95, 0.15) 0%, transparent 60%);
+      padding: 100px 40px;
+      text-align: center;
+    }
+
+    .final-cta-inner {
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .final-cta h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(30px, 3.5vw, 46px);
+      font-weight: 700;
+      color: var(--cream);
+      line-height: 1.2;
+      margin-bottom: 16px;
+    }
+
+    .final-cta p {
+      font-size: 17px;
+      color: rgba(245, 237, 216, 0.7);
+      margin-bottom: 40px;
+      line-height: 1.7;
+    }
+
+    .final-cta .subscribe-form {
+      justify-content: center;
+    }
+
+    .final-cta .subscribe-form input[type="email"] {
+      max-width: 340px;
+    }
+
+    .final-cta .form-note {
+      margin-top: 14px;
+    }
+
+    /* =============================================
+       FOOTER
+    ============================================= */
+    .footer {
+      background: var(--forest-dark);
+      border-top: 1px solid rgba(184, 146, 74, 0.2);
+      padding: 48px 40px;
+    }
+
+    .footer-inner {
+      max-width: 1120px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+      text-align: center;
+    }
+
+    .footer-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+    }
+
+    .footer-wordmark {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 800;
+      font-size: 11px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--cream);
+      opacity: 0.7;
+    }
+
+    .footer-meta {
+      font-family: 'Inter', sans-serif;
+      font-size: 13px;
+      color: rgba(245, 237, 216, 0.4);
+      line-height: 1.7;
+    }
+
+    .footer-meta a {
+      color: rgba(184, 146, 74, 0.65);
+      text-decoration: none;
+    }
+
+    .footer-meta a:hover { color: var(--gold); }
+
+    /* =============================================
+       RESPONSIVE — TABLET / MOBILE
+    ============================================= */
+    @media (max-width: 900px) {
+      .nav { padding: 0 24px; }
+
+      #subscribe { padding: 72px 24px 80px; }
+
+      .hero-inner {
+        grid-template-columns: 1fr;
+        gap: 48px;
+      }
+
+      /* On mobile, mockup appears above text */
+      .hero-visual { order: -1; }
+
+      .mockup-stack { width: 240px; height: 300px; }
+      .mockup-page  { width: 200px; }
+
+      .benefits { padding: 40px 24px; }
+      .benefits-inner {
+        grid-template-columns: 1fr 1fr;
+        gap: 28px;
+      }
+
+      .about { padding: 72px 24px; }
+      .about-inner {
+        grid-template-columns: 1fr;
+        gap: 48px;
+      }
+
+      .cheatsheet { padding: 72px 24px; }
+      .cheatsheet-inner {
+        grid-template-columns: 1fr;
+        gap: 48px;
+      }
+
+      .cheatsheet-visual { order: -1; }
+      .mockup-stack-lg { width: 240px; height: 300px; }
+      .mockup-stack-lg .mockup-page { width: 200px; }
+
+      .each-issue { padding: 72px 24px; }
+      .issue-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+      }
+
+      .final-cta { padding: 72px 24px; }
+      .final-cta .subscribe-form { flex-direction: column; align-items: center; }
+      .final-cta .subscribe-form input[type="email"] { width: 100%; max-width: 100%; }
+
+      .footer { padding: 40px 24px; }
+    }
+
+    @media (max-width: 560px) {
+      .benefits-inner { grid-template-columns: 1fr; }
+      .issue-grid { grid-template-columns: 1fr; }
+
+      .subscribe-form { flex-direction: column; }
+      .subscribe-form input[type="email"],
+      .btn-subscribe { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ============================================
+       STICKY NAV
+  ============================================= -->
+  <nav class="nav">
+    <a href="#" class="nav-logo" aria-label="The Discard home">
+      <svg width="28" height="37" viewBox="0 0 66 84" fill="none" aria-hidden="true">
+        <rect x="4" y="0" width="58" height="76" rx="8" fill="#3D7A5F"/>
+        <rect x="4" y="0" width="58" height="6" rx="4" fill="#B8924A"/>
+        <rect x="4" y="4" width="58" height="4" fill="#B8924A"/>
+        <circle cx="33" cy="22" r="9" fill="none" stroke="#B8924A" stroke-width="2.5"/>
+        <circle cx="33" cy="22" r="4" fill="#3D7A5F"/>
+        <circle cx="33" cy="42" r="9" fill="none" stroke="#F5EDD8" stroke-width="2" opacity="0.8"/>
+        <circle cx="33" cy="42" r="4" fill="#3D7A5F"/>
+        <circle cx="33" cy="62" r="9" fill="none" stroke="#B8924A" stroke-width="2.5" opacity="0.5"/>
+        <circle cx="33" cy="62" r="4" fill="#3D7A5F"/>
+      </svg>
+      <div class="nav-wordmark">
+        The Discard
+        <span>A Mahjong Newsletter</span>
+      </div>
+    </a>
+    <a href="#subscribe" class="btn-nav">Subscribe Free</a>
+  </nav>
+
+
+  <!-- ============================================
+       HERO
+  ============================================= -->
+  <section id="subscribe">
+    <div class="hero-inner">
+
+      <!-- Left Column -->
+      <div class="hero-left">
+        <p class="hero-eyebrow">Free Beginner's Cheat Sheet Included</p>
+        <h1 class="hero-h1">Finally understand what's happening at the Mahjong table.</h1>
+        <p class="hero-sub">The Discard is a weekly newsletter for people learning Mahjong — and for anyone who wants to understand it the way the people who love it do. Rules, etiquette, culture, and strategy. No prior experience needed.</p>
+
+        <!-- Form -->
+        <form class="subscribe-form" id="hero-form" onsubmit="handleHeroSubmit(event)" novalidate>
+          <input type="email" id="hero-email" placeholder="Your email address" autocomplete="email" aria-label="Email address">
+          <button type="submit" class="btn-subscribe">Subscribe Free &rarr;</button>
+        </form>
+        <p class="form-error" id="hero-error">Please enter a valid email address.</p>
+        <p class="form-note">Free to start &middot; No spam &middot; Unsubscribe anytime</p>
+
+        <!-- Success state (hidden until subscription) -->
+        <div class="subscribe-success" id="hero-success" role="alert">
+          <p>You're in! Check your email to confirm your subscription, then grab your free cheat sheet below.</p>
+          <!-- Update this path to your hosted cheat sheet URL or PDF -->
+          <a href="./cheat-sheet.html" target="_blank" class="btn-cheatsheet">Download Your Cheat Sheet &rarr;</a>
+        </div>
+      </div>
+
+      <!-- Right Column: Cheat Sheet Mockup -->
+      <div class="hero-visual" aria-hidden="true">
+        <div class="mockup-stack">
+          <!-- Back page -->
+          <div class="mockup-page mockup-page-back">
+            <div class="mockup-header">
+              <svg width="16" height="21" viewBox="0 0 66 84" fill="none"><rect x="4" y="0" width="58" height="76" rx="8" fill="#3D7A5F"/><rect x="4" y="0" width="58" height="6" rx="4" fill="#B8924A"/><rect x="4" y="4" width="58" height="4" fill="#B8924A"/><circle cx="33" cy="22" r="9" fill="none" stroke="#B8924A" stroke-width="2.5"/><circle cx="33" cy="22" r="4" fill="#3D7A5F"/></svg>
+              <div class="mockup-header-text">The Discard <span>Cheat Sheet · Page 2</span></div>
+            </div>
+            <div class="mockup-body">
+              <div class="mockup-section-label">Set Types</div>
+              <div class="mockup-row"><span class="mockup-tile">🀇</span><span class="mockup-tile">🀇</span><span class="mockup-tile">🀇</span><div class="mockup-line mockup-line-short"></div></div>
+              <div class="mockup-row"><span class="mockup-tile">🀙</span><span class="mockup-tile">🀚</span><span class="mockup-tile">🀛</span><div class="mockup-line mockup-line-mid"></div></div>
+              <div class="mockup-row"><span class="mockup-tile">🀀</span><span class="mockup-tile">🀀</span><div class="mockup-line mockup-line-short"></div></div>
+              <div class="mockup-section-label" style="margin-top:10px;">Round Structure</div>
+              <div class="mockup-row"><div class="mockup-line"></div></div>
+              <div class="mockup-row"><div class="mockup-line mockup-line-mid"></div></div>
+              <div class="mockup-row"><div class="mockup-line mockup-line-short"></div></div>
+            </div>
+          </div>
+          <!-- Front page -->
+          <div class="mockup-page mockup-page-front">
+            <div class="mockup-header">
+              <svg width="16" height="21" viewBox="0 0 66 84" fill="none"><rect x="4" y="0" width="58" height="76" rx="8" fill="#3D7A5F"/><rect x="4" y="0" width="58" height="6" rx="4" fill="#B8924A"/><rect x="4" y="4" width="58" height="4" fill="#B8924A"/><circle cx="33" cy="22" r="9" fill="none" stroke="#B8924A" stroke-width="2.5"/><circle cx="33" cy="22" r="4" fill="#3D7A5F"/></svg>
+              <div class="mockup-header-text">The Discard <span>Beginner's Cheat Sheet</span></div>
+            </div>
+            <div class="mockup-body">
+              <div class="mockup-title-bar">The Three Suits + Honor Tiles</div>
+              <div class="mockup-row"><span class="mockup-tile">🀇</span><span class="mockup-tile">🀈</span><span class="mockup-tile">🀉</span><div class="mockup-line mockup-line-short"></div></div>
+              <div class="mockup-row"><span class="mockup-tile">🀙</span><span class="mockup-tile">🀚</span><span class="mockup-tile">🀛</span><div class="mockup-line mockup-line-mid"></div></div>
+              <div class="mockup-row"><span class="mockup-tile">🀀</span><span class="mockup-tile">🀁</span><span class="mockup-tile">🀂</span><div class="mockup-line mockup-line-short"></div></div>
+              <div class="mockup-section-label" style="margin-top:10px;">Key Vocabulary</div>
+              <div class="mockup-row"><div class="mockup-line"></div></div>
+              <div class="mockup-row"><div class="mockup-line mockup-line-mid"></div></div>
+              <div class="mockup-row"><div class="mockup-line mockup-line-short"></div></div>
+              <div class="mockup-row"><div class="mockup-line mockup-line-mid"></div></div>
+              <div class="mockup-row"><div class="mockup-line"></div></div>
+            </div>
+          </div>
+          <!-- FREE badge -->
+          <div class="mockup-badge">FREE</div>
+        </div>
+      </div>
+
+    </div><!-- /hero-inner -->
+  </section>
+
+
+  <!-- ============================================
+       BENEFITS STRIP
+  ============================================= -->
+  <section class="benefits">
+    <div class="benefits-inner">
+      <div class="benefit-item">
+        <div class="benefit-icon">🀄</div>
+        <div class="benefit-text">
+          <strong>Weekly deep dives</strong>
+          Every issue covers one concept, fully explained.
+        </div>
+      </div>
+      <div class="benefit-item">
+        <div class="benefit-icon">🀁</div>
+        <div class="benefit-text">
+          <strong>Beginner-friendly</strong>
+          No experience required to start reading.
+        </div>
+      </div>
+      <div class="benefit-item">
+        <div class="benefit-icon">🀅</div>
+        <div class="benefit-text">
+          <strong>Culturally rich</strong>
+          The history and people behind the tiles.
+        </div>
+      </div>
+      <div class="benefit-item">
+        <div class="benefit-icon">🀃</div>
+        <div class="benefit-text">
+          <strong>Free to start</strong>
+          Paid tier unlocks more when you're ready.
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ============================================
+       ABOUT SECTION
+  ============================================= -->
+  <section class="about">
+    <div class="about-inner">
+
+      <div class="about-left">
+        <h2>Mahjong is having a moment. The Discard helps you keep up.</h2>
+        <p>Whether you just sat down at your first table or you've been watching from the sidelines trying to figure out what's going on, The Discard was built for you. Each week, one focused issue. No overwhelm, no jargon without explanation.</p>
+        <p>We cover the tiles, the rules, the etiquette, the culture — and eventually the strategy. This is the newsletter for players who want to actually understand the game, not just stumble through it.</p>
+      </div>
+
+      <div class="about-right">
+        <div class="pillar-cards">
+          <div class="pillar-card">
+            <h3>The Rules</h3>
+            <p>Clear explanations of how the game works, from setup to win condition.</p>
+          </div>
+          <div class="pillar-card gold">
+            <h3>The Table</h3>
+            <p>Etiquette, customs, and how to carry yourself at any Mahjong table.</p>
+          </div>
+          <div class="pillar-card terra">
+            <h3>The Culture</h3>
+            <p>The history, the community, and why this 150-year-old game is everywhere right now.</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+
+  <!-- ============================================
+       CHEAT SHEET CALLOUT
+  ============================================= -->
+  <section class="cheatsheet">
+    <div class="cheatsheet-inner">
+
+      <div class="cheatsheet-left">
+        <p class="cheatsheet-label">Your Free Gift</p>
+        <h2>The Beginner's Mahjong Cheat Sheet</h2>
+        <p class="cheatsheet-sub">4 pages of everything you need to sit down at a table and know what's going on. Yours free when you subscribe.</p>
+        <ul class="cheatsheet-list">
+          <li>The three suits + all honor tiles, with visual tile display</li>
+          <li>The four set types and the winning hand formula</li>
+          <li>How a round works, step by step</li>
+          <li>Table etiquette and key vocabulary</li>
+        </ul>
+        <button class="btn-cheatsheet-green" onclick="scrollToSubscribe()">Get Your Free Copy &rarr;</button>
+      </div>
+
+      <!-- Large mockup -->
+      <div class="cheatsheet-visual" aria-hidden="true">
+        <div class="mockup-stack mockup-stack-lg">
+          <div class="mockup-page mockup-page-back">
+            <div class="mockup-header">
+              <svg width="16" height="21" viewBox="0 0 66 84" fill="none"><rect x="4" y="0" width="58" height="76" rx="8" fill="#3D7A5F"/><rect x="4" y="0" width="58" height="6" rx="4" fill="#B8924A"/><rect x="4" y="4" width="58" height="4" fill="#B8924A"/><circle cx="33" cy="22" r="9" fill="none" stroke="#B8924A" stroke-width="2.5"/><circle cx="33" cy="22" r="4" fill="#3D7A5F"/></svg>
+              <div class="mockup-header-text">The Discard <span>Cheat Sheet · Page 3</span></div>
+            </div>
+            <div class="mockup-body">
+              <div class="mockup-section-label">Table Etiquette</div>
+              <div class="mockup-row"><div class="mockup-line"></div></div>
+              <div class="mockup-row"><div class="mockup-line mockup-line-mid"></div></div>
+              <div class="mockup-row"><div class="mockup-line mockup-line-short"></div></div>
+              <div class="mockup-section-label" style="margin-top:10px;">Key Vocabulary</div>
+              <div class="mockup-row"><div class="mockup-line"></div></div>
+              <div class="mockup-row"><div class="mockup-line mockup-line-mid"></div></div>
+              <div class="mockup-row"><div class="mockup-line"></div></div>
+              <div class="mockup-row"><div class="mockup-line mockup-line-short"></div></div>
+            </div>
+          </div>
+          <div class="mockup-page mockup-page-front">
+            <div class="mockup-header">
+              <svg width="16" height="21" viewBox="0 0 66 84" fill="none"><rect x="4" y="0" width="58" height="76" rx="8" fill="#3D7A5F"/><rect x="4" y="0" width="58" height="6" rx="4" fill="#B8924A"/><rect x="4" y="4" width="58" height="4" fill="#B8924A"/><circle cx="33" cy="22" r="9" fill="none" stroke="#B8924A" stroke-width="2.5"/><circle cx="33" cy="22" r="4" fill="#3D7A5F"/></svg>
+              <div class="mockup-header-text">The Discard <span>Beginner's Cheat Sheet</span></div>
+            </div>
+            <div class="mockup-body">
+              <div class="mockup-title-bar">The Three Suits + Honor Tiles</div>
+              <div class="mockup-row"><span class="mockup-tile">🀇</span><span class="mockup-tile">🀈</span><span class="mockup-tile">🀉</span><div class="mockup-line mockup-line-short"></div></div>
+              <div class="mockup-row"><span class="mockup-tile">🀙</span><span class="mockup-tile">🀚</span><span class="mockup-tile">🀛</span><div class="mockup-line mockup-line-mid"></div></div>
+              <div class="mockup-row"><span class="mockup-tile">🀀</span><span class="mockup-tile">🀁</span><span class="mockup-tile">🀂</span><div class="mockup-line mockup-line-short"></div></div>
+              <div class="mockup-section-label" style="margin-top:10px;">Winning Hand Formula</div>
+              <div class="mockup-row"><div class="mockup-line"></div></div>
+              <div class="mockup-row"><div class="mockup-line mockup-line-mid"></div></div>
+              <div class="mockup-row"><div class="mockup-line mockup-line-short"></div></div>
+              <div class="mockup-row"><div class="mockup-line mockup-line-mid"></div></div>
+              <div class="mockup-row"><div class="mockup-line"></div></div>
+            </div>
+          </div>
+          <div class="mockup-badge">FREE</div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+
+  <!-- ============================================
+       EACH ISSUE
+  ============================================= -->
+  <section class="each-issue">
+    <div class="each-issue-inner">
+      <h2 class="section-heading">What's inside every issue</h2>
+      <div class="issue-grid">
+        <div class="issue-card">
+          <h3>The Open</h3>
+          <p>How we set the table. A warm intro or a quick cultural hook that pulls you in.</p>
+        </div>
+        <div class="issue-card">
+          <h3>The Main Hand</h3>
+          <p>The deep dive. One concept, explained fully — tiles, rules, strategy, or history.</p>
+        </div>
+        <div class="issue-card">
+          <h3>Tile of the Week</h3>
+          <p>One tile, its history, its personality, and its place in the game.</p>
+        </div>
+        <div class="issue-card">
+          <h3>Table Talk</h3>
+          <p>Etiquette, customs, and the unwritten rules every player eventually learns.</p>
+        </div>
+        <div class="issue-card">
+          <h3>The Rack</h3>
+          <p>Resources, tools, and places to play — online and in your city.</p>
+        </div>
+        <div class="issue-card">
+          <h3>The Discard Pile</h3>
+          <p>A closing thought. Brief, considered, and always worth reading to the end.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ============================================
+       FINAL CTA
+  ============================================= -->
+  <section class="final-cta">
+    <div class="final-cta-inner">
+      <h2>Ready to pick up what we're throwing down?</h2>
+      <p>Join free. Get the cheat sheet. Learn Mahjong one week at a time.</p>
+
+      <form class="subscribe-form" id="bottom-form" onsubmit="handleBottomSubmit(event)" novalidate>
+        <input type="email" id="bottom-email" placeholder="Your email address" autocomplete="email" aria-label="Email address">
+        <button type="submit" class="btn-subscribe">Subscribe Free &rarr;</button>
+      </form>
+      <p class="form-error" id="bottom-error">Please enter a valid email address.</p>
+      <p class="form-note">Free to start &middot; No spam &middot; Unsubscribe anytime</p>
+
+      <div class="subscribe-success" id="bottom-success" role="alert" style="margin-top:24px; text-align:left;">
+        <p>You're in! Check your email to confirm your subscription, then grab your free cheat sheet below.</p>
+        <!-- Update this path to your hosted cheat sheet URL or PDF -->
+        <a href="./cheat-sheet.html" target="_blank" class="btn-cheatsheet">Download Your Cheat Sheet &rarr;</a>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ============================================
+       FOOTER
+  ============================================= -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <a href="#" class="footer-logo" aria-label="The Discard home">
+        <svg width="22" height="29" viewBox="0 0 66 84" fill="none" aria-hidden="true">
+          <rect x="4" y="0" width="58" height="76" rx="8" fill="#3D7A5F"/>
+          <rect x="4" y="0" width="58" height="6" rx="4" fill="#B8924A"/>
+          <rect x="4" y="4" width="58" height="4" fill="#B8924A"/>
+          <circle cx="33" cy="22" r="9" fill="none" stroke="#B8924A" stroke-width="2.5"/>
+          <circle cx="33" cy="22" r="4" fill="#3D7A5F"/>
+          <circle cx="33" cy="42" r="9" fill="none" stroke="#F5EDD8" stroke-width="2" opacity="0.8"/>
+          <circle cx="33" cy="42" r="4" fill="#3D7A5F"/>
+          <circle cx="33" cy="62" r="9" fill="none" stroke="#B8924A" stroke-width="2.5" opacity="0.5"/>
+          <circle cx="33" cy="62" r="4" fill="#3D7A5F"/>
+        </svg>
+        <span class="footer-wordmark">The Discard</span>
+      </a>
+      <p class="footer-meta">
+        &copy; 2025 The Discard &middot; <a href="https://thediscardnewsletter.substack.com" target="_blank">thediscardnewsletter.substack.com</a>
+      </p>
+      <p class="footer-meta">A newsletter for Mahjong beginners and enthusiasts.</p>
+    </div>
+  </footer>
+
+
+  <!-- ============================================
+       JAVASCRIPT
+
+       Substack integration notes:
+       - The fetch POST to Substack's API works when the page is hosted on a public domain.
+         It will be blocked by CORS when opened as a local file:// due to browser security.
+       - The fallback redirect to Substack's subscribe page always works (local or hosted).
+       - To switch to redirect-only (simpler, no API call), replace the fetch block in
+         subscribeUser() with just: window.location.href = SUBSTACK_URL;
+  ============================================= -->
+  <script>
+    const SUBSTACK_API = 'https://thediscardnewsletter.substack.com/api/v1/free';
+    const SUBSTACK_URL = 'https://thediscardnewsletter.substack.com/subscribe';
+
+    function isValidEmail(email) {
+      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim());
+    }
+
+    /**
+     * Core subscription handler.
+     * 1. POSTs to Substack API (works on public hosting, blocked by CORS locally).
+     * 2. On success: shows the success state with the cheat sheet download button.
+     * 3. On fetch error or CORS failure: redirects to Substack's subscribe page as fallback.
+     */
+    async function subscribeUser(email, formId) {
+      try {
+        const response = await fetch(SUBSTACK_API, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: email.trim(), utm_source: 'landing_page' })
+        });
+
+        if (response.ok) {
+          showSuccess(formId);
+        } else {
+          // Non-2xx response: fall back to Substack's own subscribe flow
+          window.location.href = SUBSTACK_URL;
+        }
+      } catch (err) {
+        // Network error or CORS block (common on local file://)
+        // Redirect to Substack — they handle the rest
+        window.location.href = SUBSTACK_URL;
+      }
+    }
+
+    function showSuccess(formId) {
+      const form   = document.getElementById(formId + '-form');
+      const error  = document.getElementById(formId + '-error');
+      const success = document.getElementById(formId + '-success');
+      if (form)    form.style.display    = 'none';
+      if (error)   error.style.display   = 'none';
+      if (success) success.style.display = 'block';
+    }
+
+    function handleHeroSubmit(event) {
+      event.preventDefault();
+      const emailInput = document.getElementById('hero-email');
+      const errorEl    = document.getElementById('hero-error');
+      const email      = emailInput.value;
+
+      if (!isValidEmail(email)) {
+        errorEl.style.display = 'block';
+        emailInput.focus();
+        return;
+      }
+
+      errorEl.style.display = 'none';
+      subscribeUser(email, 'hero');
+    }
+
+    function handleBottomSubmit(event) {
+      event.preventDefault();
+      const emailInput = document.getElementById('bottom-email');
+      const errorEl    = document.getElementById('bottom-error');
+      const email      = emailInput.value;
+
+      if (!isValidEmail(email)) {
+        errorEl.style.display = 'block';
+        emailInput.focus();
+        return;
+      }
+
+      errorEl.style.display = 'none';
+      subscribeUser(email, 'bottom');
+    }
+
+    function scrollToSubscribe() {
+      document.getElementById('subscribe').scrollIntoView({ behavior: 'smooth' });
+    }
+  </script>
+
+</body>
+</html>
