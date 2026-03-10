@@ -1,0 +1,823 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Discard — Advanced Mahjong Reference</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Montserrat:wght@300;400;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --jade: #3D7A5F;
+      --forest: #1C3A2E;
+      --cream: #F5EDD8;
+      --terra: #C4623A;
+      --gold: #B8924A;
+      --white: #ffffff;
+      --rule: #E0D8C8;
+      --light: #F9F5EC;
+      --text: #2A2A2A;
+      --jade2: #5BAE8A;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Inter', sans-serif; background: #C4BEB4; color: var(--text); line-height: 1.6; }
+
+    .screen-bar {
+      background: var(--forest); color: var(--cream);
+      padding: 14px 32px;
+      display: flex; align-items: center; justify-content: space-between;
+      position: sticky; top: 0; z-index: 100;
+      box-shadow: 0 2px 16px rgba(0,0,0,0.35);
+    }
+    .screen-bar h1 { font-family: 'Playfair Display', serif; font-size: 17px; }
+    .screen-bar p  { font-size: 10px; opacity: 0.45; font-family: 'Montserrat', sans-serif; letter-spacing: 1px; margin-top: 2px; }
+    .print-btn {
+      background: var(--gold); color: white; border: none; cursor: pointer;
+      font-family: 'Montserrat', sans-serif; font-size: 11px; font-weight: 700;
+      letter-spacing: 2px; text-transform: uppercase; padding: 9px 22px; border-radius: 20px;
+    }
+    .print-btn:hover { background: #9A7038; }
+
+    .page {
+      width: 8.5in; height: 11in;
+      margin: 28px auto;
+      background: var(--cream);
+      box-shadow: 0 8px 48px rgba(0,0,0,0.28);
+      position: relative; overflow: hidden;
+      display: flex; flex-direction: column;
+    }
+    .wm { position: absolute; right: -30px; bottom: -30px; opacity: 0.035; pointer-events: none; }
+
+    /* ── HEADER ── */
+    .ph { background: var(--forest); border-bottom: 3px solid var(--gold); flex-shrink: 0; }
+    .ph-inner { display: flex; align-items: center; justify-content: space-between; padding: 15px 36px; }
+    .ph-left  { display: flex; align-items: center; gap: 13px; }
+    .ph-wm .the  { font-family:'Montserrat',sans-serif; font-weight:800; font-size:19px; color:var(--cream); letter-spacing:2px; line-height:1; }
+    .ph-wm .disc { font-family:'Montserrat',sans-serif; font-weight:300; font-size:16px; color:var(--gold); letter-spacing:5px; line-height:1; }
+    .ph-right { text-align: right; }
+    .ph-title { font-family:'Playfair Display',serif; font-size:17px; color:var(--cream); }
+    .ph-sub   { font-family:'Montserrat',sans-serif; font-size:8.5px; letter-spacing:2px; text-transform:uppercase; color:var(--gold); margin-top:3px; }
+
+    /* ── BODY ── */
+    .pb { padding: 28px 40px 22px; flex: 1; display: flex; flex-direction: column; gap: 22px; }
+
+    /* ── FOOTER ── */
+    .pf {
+      background: var(--forest); border-top: 2px solid var(--gold);
+      padding: 9px 36px;
+      display: flex; justify-content: space-between; align-items: center; flex-shrink: 0;
+    }
+    .pf p  { font-family:'Montserrat',sans-serif; font-size:9px; color:var(--cream); opacity:0.38; letter-spacing:1px; }
+    .pf .pn { font-family:'Montserrat',sans-serif; font-weight:800; font-size:11px; color:var(--gold); }
+
+    /* ── SECTION LABEL ── */
+    .sl {
+      font-family:'Montserrat',sans-serif; font-size:9px; font-weight:800;
+      letter-spacing:3px; text-transform:uppercase; color:var(--gold);
+      display:flex; align-items:center; gap:12px; margin-bottom:12px;
+    }
+    .sl::after { content:''; flex:1; height:1px; background:var(--gold); opacity:0.25; }
+
+    /* ── BADGES ── */
+    .rb { display:inline-block; font-family:'Montserrat',sans-serif; font-size:7.5px; font-weight:700; letter-spacing:1px; padding:2px 7px; border-radius:8px; margin-left:4px; vertical-align:middle; text-transform:uppercase; white-space:nowrap; }
+    .rb-u  { background:var(--jade);   color:#fff; }
+    .rb-v  { background:var(--gold);   color:#fff; }
+    .rb-r  { background:var(--forest); color:var(--cream); }
+    .rb-a  { background:var(--terra);  color:#fff; }
+    .rb-hk { background:var(--jade2);  color:#fff; }
+
+    .badge-legend { display:flex; gap:12px; align-items:center; flex-wrap:wrap; background:var(--white); border-radius:10px; padding:10px 16px; }
+    .badge-legend .bl-label { font-family:'Montserrat',sans-serif; font-size:9px; font-weight:700; color:#AAA; letter-spacing:1px; text-transform:uppercase; }
+    .badge-legend span { font-size:10px; color:#666; display:flex; align-items:center; gap:4px; }
+
+    /* ── TILES ── */
+    .t { width:34px; height:44px; background:var(--white); border:1.5px solid #D5CCC0; border-radius:5px; display:flex; align-items:center; justify-content:center; font-size:20px; position:relative; flex-shrink:0; box-shadow:0 2px 5px rgba(0,0,0,0.08); }
+    .t-lg { width:42px; height:54px; font-size:26px; }
+    .t-xl { width:48px; height:62px; font-size:30px; }
+    .t-fd { width:42px; height:54px; background:var(--forest); border-radius:5px; border:1.5px solid #0E2218; flex-shrink:0; position:relative; }
+    .t-fd::after { content:''; position:absolute; inset:4px; border:1px solid rgba(184,146,74,0.3); border-radius:3px; }
+
+    /* ── SET CARDS ── */
+    .sets-grid4 { display:grid; grid-template-columns:repeat(4,1fr); gap:14px; }
+    .sets-grid3 { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; }
+
+    .set-card { background:var(--white); border-radius:10px; padding:16px 15px 18px; border-bottom:4px solid var(--jade); }
+    .set-card.chow  { border-bottom-color:var(--jade2); }
+    .set-card.kong  { border-bottom-color:var(--forest); }
+    .set-card.pair  { border-bottom-color:var(--terra); }
+    .set-card.kong-c { border-bottom-color:var(--forest); }
+    .set-card.kong-o { border-bottom-color:var(--jade); }
+    .set-card.kong-a { border-bottom-color:var(--gold); }
+
+    .set-name { font-family:'Montserrat',sans-serif; font-weight:800; font-size:13.5px; color:var(--forest); line-height:1; }
+    .set-zh   { font-size:9.5px; color:#BBB; margin:3px 0 10px; font-family:'Montserrat',sans-serif; }
+    .set-tiles{ display:flex; gap:4px; margin-bottom:10px; flex-wrap:wrap; }
+    .set-def  { font-size:11px; color:#555; line-height:1.7; }
+    .set-def strong { color:var(--forest); }
+
+    /* ── SCORE BLOCK ── */
+    .score-block { background:var(--white); border-radius:10px; padding:18px 22px; }
+    .score-block-title { font-family:'Montserrat',sans-serif; font-weight:800; font-size:13px; color:var(--forest); margin-bottom:5px; display:flex; align-items:center; gap:8px; }
+    .score-block-sub { font-size:11px; color:#777; margin-bottom:14px; line-height:1.65; }
+    .score-block-sub strong { color:var(--forest); }
+
+    .score-table { width:100%; border-collapse:collapse; }
+    .score-table th { font-family:'Montserrat',sans-serif; font-size:8.5px; font-weight:800; letter-spacing:1.5px; text-transform:uppercase; color:#AAA; text-align:left; padding:5px 8px 7px; border-bottom:2px solid var(--rule); }
+    .score-table th.r { text-align:right; }
+    .score-table td { font-size:11.5px; color:#444; padding:7px 8px; border-bottom:1px solid #F0EAE0; line-height:1.45; vertical-align:middle; }
+    .score-table td.val { text-align:right; font-family:'Montserrat',sans-serif; font-weight:800; font-size:12px; white-space:nowrap; padding-right:10px; }
+    .score-table td.val.jade  { color:var(--jade); }
+    .score-table td.val.gold  { color:var(--gold); }
+    .score-table td.val.terra { color:var(--terra); }
+    .score-table td.open { font-size:9.5px; color:#AAA; white-space:nowrap; padding-left:10px; }
+    .score-table tr:last-child td { border-bottom:none; }
+    .score-table tr.hl td { background:#F9F5EC; }
+
+    /* ── MANGAN TABLE ── */
+    .mangan-table { width:100%; border-collapse:collapse; }
+    .mangan-table th { font-family:'Montserrat',sans-serif; font-size:8.5px; font-weight:800; letter-spacing:1.5px; text-transform:uppercase; color:#AAA; text-align:left; padding:5px 8px 7px; border-bottom:2px solid var(--rule); }
+    .mangan-table td { font-size:11.5px; color:#444; padding:7px 8px; border-bottom:1px solid #F0EAE0; vertical-align:middle; }
+    .mangan-table td strong { color:var(--forest); }
+    .mangan-table td.pts { text-align:right; font-family:'Montserrat',sans-serif; font-weight:800; font-size:12px; color:var(--jade); white-space:nowrap; padding-right:10px; }
+    .mangan-table tr:last-child td { border-bottom:none; }
+    .mangan-table tr.top td { background:#FFF6F2; }
+    .mangan-table tr.top td.pts { color:var(--terra); }
+
+    /* ── CALLOUT ── */
+    .callout { background:var(--forest); border-radius:10px; padding:16px 22px; font-size:11.5px; color:rgba(245,237,216,0.75); line-height:1.85; }
+    .callout .cl { font-family:'Montserrat',sans-serif; font-size:8.5px; font-weight:800; letter-spacing:2px; text-transform:uppercase; color:var(--gold); margin-bottom:7px; }
+    .callout strong { color:var(--cream); }
+
+    /* ── NOTE BOX ── */
+    .note-box { background:var(--white); border:1px solid var(--rule); border-radius:10px; padding:14px 18px; font-size:11.5px; color:#555; line-height:1.8; }
+    .note-box strong { color:var(--forest); }
+
+    /* ── NMJL ── */
+    .nmjl-note { background:var(--white); border-radius:10px; padding:16px 20px; border-left:4px solid var(--terra); }
+    .nmjl-note .nmjl-title { font-family:'Montserrat',sans-serif; font-weight:800; font-size:12px; color:var(--terra); margin-bottom:8px; display:flex; align-items:center; gap:8px; }
+    .nmjl-note p { font-size:11.5px; color:#555; line-height:1.8; }
+    .nmjl-note p strong { color:var(--forest); }
+
+    /* ── TABLE DIAGRAM ── */
+    .table-diagram-wrap { display:grid; grid-template-columns:auto 1fr; gap:22px; align-items:start; }
+
+    /* ── ROTATION CARDS ── */
+    .rotation-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; }
+    .rot-card { background:var(--white); border-radius:10px; padding:14px 16px; border-top:3px solid var(--jade); }
+    .rot-card.riichi   { border-top-color:var(--forest); }
+    .rot-card.american { border-top-color:var(--terra); }
+    .rot-title { font-family:'Montserrat',sans-serif; font-weight:800; font-size:11.5px; color:var(--forest); margin-bottom:7px; display:flex; align-items:center; gap:7px; }
+    .rot-body  { font-size:11.5px; color:#555; line-height:1.75; }
+    .rot-body strong { color:var(--forest); }
+
+    /* ── TENPAI BLOCK ── */
+    .tenpai-block { background:var(--forest); border-radius:12px; padding:20px 24px; display:grid; grid-template-columns:1fr 1fr 1fr; gap:22px; }
+    .tp-term { font-family:'Montserrat',sans-serif; font-weight:800; font-size:11.5px; color:var(--gold); margin-bottom:5px; }
+    .tp-body  { font-size:11.5px; color:rgba(245,237,216,0.72); line-height:1.75; }
+    .tp-body strong { color:var(--cream); }
+
+    /* ── DEFENSE ── */
+    .def-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+    .def-card { background:var(--white); border-radius:10px; padding:16px 18px; }
+    .def-card.safe   { border-left:4px solid var(--jade); }
+    .def-card.danger { border-left:4px solid var(--terra); }
+    .def-title { font-family:'Montserrat',sans-serif; font-weight:800; font-size:11.5px; color:var(--forest); margin-bottom:9px; }
+    .def-list { list-style:none; display:flex; flex-direction:column; gap:6px; }
+    .def-list li { font-size:11px; color:#555; line-height:1.6; display:flex; gap:8px; }
+    .def-list li::before { content:'—'; color:var(--gold); flex-shrink:0; }
+    .def-list li strong { color:var(--forest); }
+
+    /* ── SPECIAL HANDS ── */
+    .hands-table { width:100%; border-collapse:collapse; }
+    .hands-table th { font-family:'Montserrat',sans-serif; font-size:8.5px; font-weight:800; letter-spacing:1.5px; text-transform:uppercase; color:#AAA; text-align:left; padding:5px 8px 7px; border-bottom:2px solid var(--rule); }
+    .hands-table td { font-size:11.5px; color:#444; padding:8px 8px; border-bottom:1px solid #EEE8DC; vertical-align:middle; line-height:1.45; }
+    .hands-table td.hand-name { font-family:'Montserrat',sans-serif; font-weight:800; font-size:12px; color:var(--forest); white-space:nowrap; }
+    .hands-table td.hand-zh   { color:#AAA; font-size:10px; white-space:nowrap; }
+    .hands-table td.hand-val  { font-family:'Montserrat',sans-serif; font-weight:800; font-size:12px; color:var(--terra); white-space:nowrap; text-align:right; padding-right:8px; }
+    .hands-table tr:last-child td { border-bottom:none; }
+    .hands-table tr.yakuman td { background:#FFF8F3; }
+    .hands-table tr.yakuman td.hand-name { color:var(--terra); }
+
+    /* ── GLOSSARY ── */
+    .gloss { display:grid; grid-template-columns:1fr 1fr; gap:0 32px; }
+    .gi { display:flex; gap:8px; align-items:baseline; padding:6px 0; border-bottom:1px solid #EEE8DC; font-size:11px; }
+    .gt { font-family:'Montserrat',sans-serif; font-weight:800; font-size:10px; color:var(--jade); white-space:nowrap; min-width:72px; }
+    .gt.r { color:var(--forest); }
+    .gd { color:#555; line-height:1.5; }
+
+    /* ── CTA ── */
+    .cta { background:var(--jade); border-radius:12px; padding:20px 26px; display:flex; align-items:center; justify-content:space-between; gap:22px; margin-top:auto; }
+    .cta-left .cta-label { font-family:'Montserrat',sans-serif; font-size:9px; font-weight:800; letter-spacing:2px; text-transform:uppercase; color:rgba(245,237,216,0.6); margin-bottom:5px; }
+    .cta-left .cta-main  { font-family:'Playfair Display',serif; font-size:18px; color:var(--cream); line-height:1.4; }
+    .cta-left .cta-sub   { font-size:11px; color:rgba(245,237,216,0.7); margin-top:4px; }
+    .cta-url { font-family:'Montserrat',sans-serif; font-weight:700; font-size:11.5px; color:var(--cream); white-space:nowrap; border:2px solid rgba(245,237,216,0.35); padding:11px 18px; border-radius:22px; flex-shrink:0; text-align:center; line-height:1.65; }
+
+    .logo { display:block; flex-shrink:0; }
+
+    @page { size:8.5in 11in; margin:0; }
+    @media print {
+      body { background:white; }
+      .screen-bar { display:none; }
+      .page { margin:0; box-shadow:none; page-break-after:always; break-after:page; }
+      .page:last-child { page-break-after:auto; break-after:auto; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="screen-bar">
+  <div>
+    <h1>The Discard — Advanced Mahjong Reference</h1>
+    <p>6 pages · print double-sided · or save as PDF</p>
+  </div>
+  <button class="print-btn" onclick="window.print()">Print / Save PDF</button>
+</div>
+
+
+<!-- ═══════════════════════════════ PAGE 1 · THE FULL HAND ═══════════════════════════════ -->
+<div class="page">
+  <svg class="wm" width="280" height="360" viewBox="0 0 66 84" fill="none">
+    <rect x="4" y="0" width="58" height="76" rx="8" fill="#1C3A2E"/>
+    <circle cx="33" cy="22" r="9" fill="none" stroke="#1C3A2E" stroke-width="2"/>
+    <circle cx="33" cy="42" r="9" fill="none" stroke="#1C3A2E" stroke-width="2"/>
+    <circle cx="33" cy="62" r="9" fill="none" stroke="#1C3A2E" stroke-width="2"/>
+  </svg>
+  <div class="ph"><div class="ph-inner">
+    <div class="ph-left">
+      <svg class="logo" width="32" height="42" viewBox="0 0 66 84" fill="none">
+        <rect x="4" y="0" width="58" height="76" rx="8" fill="#3D7A5F"/>
+        <rect x="4" y="0" width="58" height="6" rx="4" fill="#B8924A"/>
+        <rect x="4" y="4" width="58" height="4" fill="#B8924A"/>
+        <circle cx="33" cy="22" r="9" fill="none" stroke="#B8924A" stroke-width="2.5"/>
+        <circle cx="33" cy="22" r="4" fill="#3D7A5F"/>
+        <circle cx="33" cy="42" r="9" fill="none" stroke="#F5EDD8" stroke-width="2" opacity="0.8"/>
+        <circle cx="33" cy="42" r="4" fill="#3D7A5F"/>
+        <circle cx="33" cy="62" r="9" fill="none" stroke="#B8924A" stroke-width="2.5" opacity="0.5"/>
+        <circle cx="33" cy="62" r="4" fill="#3D7A5F"/>
+      </svg>
+      <div class="ph-wm"><div class="the">THE</div><div class="disc">DISCARD</div></div>
+    </div>
+    <div class="ph-right">
+      <div class="ph-title">Advanced Mahjong Reference</div>
+      <div class="ph-sub">Page 1 of 6 &nbsp;·&nbsp; The Full Hand</div>
+    </div>
+  </div></div>
+
+  <div class="pb">
+
+    <div class="badge-legend">
+      <span class="bl-label">Ruleset key</span>
+      <span><span class="rb rb-u">Universal</span> most styles</span>
+      <span><span class="rb rb-v">Varies</span> by house rules</span>
+      <span><span class="rb rb-hk">HK</span> Hong Kong</span>
+      <span><span class="rb rb-r">Riichi</span> Japanese Riichi</span>
+      <span><span class="rb rb-a">American</span> NMJL</span>
+    </div>
+
+    <div>
+      <div class="sl">All Four Set Types</div>
+      <div class="sets-grid4">
+        <div class="set-card">
+          <div class="set-name">Pung <span class="rb rb-u">Universal</span></div>
+          <div class="set-zh">碰 · Three of a kind</div>
+          <div class="set-tiles"><div class="t t-lg">🀄</div><div class="t t-lg">🀄</div><div class="t t-lg">🀄</div></div>
+          <div class="set-def">Three <strong>identical</strong> tiles. Works with any tile type. Claim from <strong>any player's discard</strong>. Show face-up, then discard one tile from your hand.</div>
+        </div>
+        <div class="set-card chow">
+          <div class="set-name">Chow <span class="rb rb-v">Varies</span></div>
+          <div class="set-zh">吃 · Three-tile sequence</div>
+          <div class="set-tiles"><div class="t t-lg">🀛</div><div class="t t-lg">🀜</div><div class="t t-lg">🀝</div></div>
+          <div class="set-def">Three <strong>consecutive numbers</strong>, same suit. Honor tiles cannot form a Chow. Usually claimed only from the player to your <strong>left</strong>. Not used in American NMJL.</div>
+        </div>
+        <div class="set-card kong">
+          <div class="set-name">Kong <span class="rb rb-u">Universal</span></div>
+          <div class="set-zh">槓 · Four of a kind</div>
+          <div class="set-tiles"><div class="t t-lg">🀅</div><div class="t t-lg">🀅</div><div class="t t-lg">🀅</div><div class="t t-lg">🀅</div></div>
+          <div class="set-def">Four <strong>identical</strong> tiles — still counts as one set. <strong>Always draw a bonus tile</strong> from the dead wall after declaring. You must still discard.</div>
+        </div>
+        <div class="set-card pair">
+          <div class="set-name">Pair <span class="rb rb-u">Universal</span></div>
+          <div class="set-zh">雀 · The eyes</div>
+          <div class="set-tiles"><div class="t t-lg">🀡</div><div class="t t-lg">🀡</div></div>
+          <div class="set-def">Two <strong>identical</strong> tiles. Every winning hand needs <strong>exactly one pair</strong>. Called the "eyes." No pair, no win — build and protect it early.</div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="sl">Kong Variants — Three ways to declare four of a kind</div>
+      <div class="sets-grid3">
+        <div class="set-card kong-c">
+          <div class="set-name">Concealed Kong</div>
+          <div class="set-zh">暗槓 · Ankan (Riichi)</div>
+          <div class="set-tiles"><div class="t-fd"></div><div class="t t-lg">🀆</div><div class="t t-lg">🀆</div><div class="t-fd"></div></div>
+          <div class="set-def">You draw all <strong>four tiles from the wall yourself</strong>. Outer tiles stay face-down. Draw a bonus tile from the dead wall. In Riichi, this does <strong>not open your hand</strong> — you can still win on Riichi declaration.</div>
+        </div>
+        <div class="set-card kong-o">
+          <div class="set-name">Open Kong</div>
+          <div class="set-zh">大明槓 · Daiminkan (Riichi)</div>
+          <div class="set-tiles"><div class="t t-lg">🀀</div><div class="t t-lg">🀀</div><div class="t t-lg">🀀</div><div class="t t-lg">🀀</div></div>
+          <div class="set-def">Someone discards the <strong>4th tile</strong> when you hold the other three. Claim it, reveal all four face-up, draw from dead wall. <strong>Opens your hand</strong> — restricts scoring patterns in Riichi.</div>
+        </div>
+        <div class="set-card kong-a">
+          <div class="set-name">Added Kong</div>
+          <div class="set-zh">加槓 · Shouminkan (Riichi)</div>
+          <div class="set-tiles"><div class="t t-lg">🀂</div><div class="t t-lg">🀂</div><div class="t t-lg">🀂</div><div class="t t-lg" style="border:2px solid var(--gold)">🀂</div></div>
+          <div class="set-def">You already have an <strong>exposed Pung</strong> and draw the 4th tile. Add it to the meld, draw from dead wall. Caution: opponents may declare <strong>Chankan</strong> — claiming that tile to win immediately.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="note-box">
+      <strong>Flower &amp; Season Tiles:</strong> Some sets include 8 bonus tiles — 4 Seasons and 4 Flowers. When drawn, set them aside face-up and immediately draw a replacement from the dead wall. Each scores 1 bonus point. Not present in all sets or rulesets — confirm before play. <span class="rb rb-v">Varies</span>
+    </div>
+
+  </div>
+
+  <div class="pf">
+    <p>The Discard &nbsp;·&nbsp; thediscardnewsletter.substack.com &nbsp;·&nbsp; Free to share</p>
+    <div class="pn">1 / 6</div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════ PAGE 2 · HK SCORING ═══════════════════════════════ -->
+<div class="page">
+  <svg class="wm" width="280" height="360" viewBox="0 0 66 84" fill="none">
+    <rect x="4" y="0" width="58" height="76" rx="8" fill="#1C3A2E"/>
+    <circle cx="33" cy="22" r="9" fill="none" stroke="#1C3A2E" stroke-width="2"/>
+    <circle cx="33" cy="42" r="9" fill="none" stroke="#1C3A2E" stroke-width="2"/>
+    <circle cx="33" cy="62" r="9" fill="none" stroke="#1C3A2E" stroke-width="2"/>
+  </svg>
+  <div class="ph"><div class="ph-inner">
+    <div class="ph-left">
+      <svg class="logo" width="32" height="42" viewBox="0 0 66 84" fill="none">
+        <rect x="4" y="0" width="58" height="76" rx="8" fill="#3D7A5F"/>
+        <rect x="4" y="0" width="58" height="6" rx="4" fill="#B8924A"/>
+        <rect x="4" y="4" width="58" height="4" fill="#B8924A"/>
+        <circle cx="33" cy="22" r="9" fill="none" stroke="#B8924A" stroke-width="2.5"/>
+        <circle cx="33" cy="22" r="4" fill="#3D7A5F"/>
+        <circle cx="33" cy="42" r="9" fill="none" stroke="#F5EDD8" stroke-width="2" opacity="0.8"/>
+        <circle cx="33" cy="42" r="4" fill="#3D7A5F"/>
+        <circle cx="33" cy="62" r="9" fill="none" stroke="#B8924A" stroke-width="2.5" opacity="0.5"/>
+        <circle cx="33" cy="62" r="4" fill="#3D7A5F"/>
+      </svg>
+      <div class="ph-wm"><div class="the">THE</div><div class="disc">DISCARD</div></div>
+    </div>
+    <div class="ph-right">
+      <div class="ph-title">Advanced Mahjong Reference</div>
+      <div class="ph-sub">Page 2 of 6 &nbsp;·&nbsp; Scoring — Hong Kong Style</div>
+    </div>
+  </div></div>
+
+  <div class="pb">
+
+    <div class="score-block">
+      <div class="score-block-title">Hong Kong Old Style Scoring <span class="rb rb-hk">HK</span></div>
+      <div class="score-block-sub">
+        Scoring is based on <strong>Fan 番 (doubles)</strong>. Identify which patterns your winning hand contains, add up the Fan, and collect from opponents. Most tables require a <strong>minimum of 3 Fan</strong> to declare a win. Fan values below reflect common Hong Kong practice — exact values vary by region and house rules.
+      </div>
+      <table class="score-table">
+        <thead><tr><th>Pattern</th><th class="r">Fan</th></tr></thead>
+        <tbody>
+          <tr><td>Seat Wind Pung — three of your own seat wind tile</td><td class="val jade">+1</td></tr>
+          <tr><td>Round Wind Pung — three of the current prevailing wind</td><td class="val jade">+1</td></tr>
+          <tr><td>Dragon Pung — three of any dragon (Red, Green, or White)</td><td class="val jade">+1</td></tr>
+          <tr><td>Self-Draw win (Zimo) — you drew your own winning tile from the wall</td><td class="val jade">+1</td></tr>
+          <tr><td>All Concealed — no exposed melds; hand built entirely from your own draws</td><td class="val jade">+1</td></tr>
+          <tr><td>Mixed One-Suit — one number suit plus honor tiles only</td><td class="val jade">+1</td></tr>
+          <tr><td>Last Tile — winning off the very last tile drawn from the wall</td><td class="val jade">+1</td></tr>
+          <tr><td>Dead Wall Draw — winning tile came from after a Kong declaration</td><td class="val jade">+1</td></tr>
+          <tr><td>Robbing a Kong (Chankan) — win off an opponent's Added Kong tile</td><td class="val jade">+1</td></tr>
+          <tr class="hl"><td>All Pungs — four Pungs (or Kongs) and one Pair; no Chows at all</td><td class="val gold">+3</td></tr>
+          <tr class="hl"><td>Full Flush — one suit plus honors (a stronger Mixed One-Suit)</td><td class="val gold">+3</td></tr>
+          <tr class="hl"><td>All Honors — only Wind and Dragon tiles in the entire hand</td><td class="val gold">+5</td></tr>
+          <tr class="hl"><td>Pure Flush — one suit only; no honor tiles whatsoever</td><td class="val terra">+7</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout">
+      <div class="cl">How Fan stacking works</div>
+      Fan is <strong>additive across patterns</strong>. A self-draw win (+1) with All Pungs (+3) and a Dragon Pung (+1) = 5 Fan total. Fan then multiplies the base point value — a 4-Fan hand is worth twice a 3-Fan hand. <strong>Always confirm the base point value and any cap before you start.</strong> When East wins, East typically collects double — or all three opponents pay double to East.
+    </div>
+
+    <div class="note-box">
+      <strong>Double Wind bonus:</strong> If your seat wind matches the round wind — which only happens when you are East during the East Round — a Pung of East Wind scores <strong>twice</strong>: once for seat wind and once for round wind. That's 2 Fan from a single set.
+    </div>
+
+  </div>
+
+  <div class="pf">
+    <p>The Discard &nbsp;·&nbsp; thediscardnewsletter.substack.com &nbsp;·&nbsp; Free to share</p>
+    <div class="pn">2 / 6</div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════ PAGE 3 · RIICHI & AMERICAN ═══════════════════════════════ -->
+<div class="page">
+  <svg class="wm" width="280" height="360" viewBox="0 0 66 84" fill="none">
+    <rect x="4" y="0" width="58" height="76" rx="8" fill="#1C3A2E"/>
+    <circle cx="33" cy="22" r="9" fill="none" stroke="#1C3A2E" stroke-width="2"/>
+    <circle cx="33" cy="42" r="9" fill="none" stroke="#1C3A2E" stroke-width="2"/>
+    <circle cx="33" cy="62" r="9" fill="none" stroke="#1C3A2E" stroke-width="2"/>
+  </svg>
+  <div class="ph"><div class="ph-inner">
+    <div class="ph-left">
+      <svg class="logo" width="32" height="42" viewBox="0 0 66 84" fill="none">
+        <rect x="4" y="0" width="58" height="76" rx="8" fill="#3D7A5F"/>
+        <rect x="4" y="0" width="58" height="6" rx="4" fill="#B8924A"/>
+        <rect x="4" y="4" width="58" height="4" fill="#B8924A"/>
+        <circle cx="33" cy="22" r="9" fill="none" stroke="#B8924A" stroke-width="2.5"/>
+        <circle cx="33" cy="22" r="4" fill="#3D7A5F"/>
+        <circle cx="33" cy="42" r="9" fill="none" stroke="#F5EDD8" stroke-width="2" opacity="0.8"/>
+        <circle cx="33" cy="42" r="4" fill="#3D7A5F"/>
+        <circle cx="33" cy="62" r="9" fill="none" stroke="#B8924A" stroke-width="2.5" opacity="0.5"/>
+        <circle cx="33" cy="62" r="4" fill="#3D7A5F"/>
+      </svg>
+      <div class="ph-wm"><div class="the">THE</div><div class="disc">DISCARD</div></div>
+    </div>
+    <div class="ph-right">
+      <div class="ph-title">Advanced Mahjong Reference</div>
+      <div class="ph-sub">Page 3 of 6 &nbsp;·&nbsp; Scoring — Riichi &amp; American</div>
+    </div>
+  </div></div>
+
+  <div class="pb">
+
+    <div class="score-block">
+      <div class="score-block-title">Japanese Riichi — Essential Yaku <span class="rb rb-r">Riichi</span></div>
+      <div class="score-block-sub">
+        You <strong>must have at least one Yaku 役</strong> to win. No yaku = no win, even with a complete 14-tile hand. Scoring = Han × Fu; at 5+ Han use the mangan thresholds below. Dora tiles add Han but <em>cannot</em> substitute for a Yaku.
+      </div>
+      <table class="score-table">
+        <thead><tr><th>Yaku 役</th><th>Han</th><th class="r">Open?</th></tr></thead>
+        <tbody>
+          <tr><td>Riichi 立直 — declare tenpai closed; bet 1,000 pts; lock your hand</td><td class="val jade">1</td><td class="open">Closed only</td></tr>
+          <tr><td>Tanyao 断么 — all tiles are 2–8; no terminals or honors</td><td class="val jade">1</td><td class="open">Yes — 1 han</td></tr>
+          <tr><td>Pinfu 平和 — all Chows, two-sided wait, pair is not yakuhai</td><td class="val jade">1</td><td class="open">Closed only</td></tr>
+          <tr><td>Yakuhai 役牌 — Pung of your seat wind, round wind, or any dragon</td><td class="val jade">1</td><td class="open">Yes — 1 han</td></tr>
+          <tr><td>Ippatsu — win within one full turn cycle after declaring Riichi</td><td class="val jade">1</td><td class="open">Closed only</td></tr>
+          <tr><td>Chiitoitsu 七対子 — seven different pairs; always 25 fu; closed only</td><td class="val gold">2</td><td class="open">Closed only</td></tr>
+          <tr><td>Toitoi 対々和 — all four sets are Pungs or Kongs; no Chows</td><td class="val gold">2</td><td class="open">Yes — 2 han</td></tr>
+          <tr class="hl"><td>Honitsu 混一色 — one suit plus honor tiles only; no other suit</td><td class="val gold">3</td><td class="open">Open: 2 han</td></tr>
+          <tr class="hl"><td>Chinitsu 清一色 — one suit only; no honor tiles at all</td><td class="val terra">6</td><td class="open">Open: 5 han</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div>
+      <div class="sl">Mangan Thresholds — Use these instead of calculating Han × Fu above 5 Han</div>
+      <table class="mangan-table">
+        <thead><tr><th>Name</th><th>Condition</th><th style="text-align:right;padding-right:10px;">Non-dealer win</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Mangan</strong> 満貫</td><td>5 han · or 3 han 70 fu · or 4 han 30 fu</td><td class="pts">8,000</td></tr>
+          <tr><td><strong>Haneman</strong> 跳満</td><td>6–7 han</td><td class="pts">12,000</td></tr>
+          <tr><td><strong>Baiman</strong> 倍満</td><td>8–10 han</td><td class="pts">16,000</td></tr>
+          <tr><td><strong>Sanbaiman</strong> 三倍満</td><td>11–12 han</td><td class="pts">24,000</td></tr>
+          <tr class="top"><td><strong>Yakuman</strong> 役満</td><td>13+ han, or a designated special hand</td><td class="pts">32,000</td></tr>
+        </tbody>
+      </table>
+      <div style="font-size:10px;color:#999;margin-top:8px;line-height:1.55;">Dealer wins are 1.5× these values. Dora and Ura Dora (revealed only when a Riichi player wins) add Han on top of yaku but cannot replace a yaku.</div>
+    </div>
+
+    <div class="nmjl-note">
+      <div class="nmjl-title">American Mahjong — NMJL <span class="rb rb-a">American</span></div>
+      <p>Scoring is <strong>card-based</strong>. The National Mah Jongg League publishes an annual card listing every valid winning hand, each worth <strong>25 or 50 points</strong>. You must match an exact hand from that card — no improvisation, no partial credit. Key differences: <strong>Joker tiles</strong> (2 per set) substitute for any suit tile in a meld of 3+ but never in a pair. A structured <strong>Charleston</strong> — three rounds of tile-passing — happens before play begins each hand. Chow sequences are not used. Confirm you have the current year's card before play.</p>
+    </div>
+
+  </div>
+
+  <div class="pf">
+    <p>The Discard &nbsp;·&nbsp; thediscardnewsletter.substack.com &nbsp;·&nbsp; Free to share</p>
+    <div class="pn">3 / 6</div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════ PAGE 4 · TABLE DYNAMICS ═══════════════════════════════ -->
+<div class="page">
+  <svg class="wm" width="280" height="360" viewBox="0 0 66 84" fill="none">
+    <rect x="4" y="0" width="58" height="76" rx="8" fill="#1C3A2E"/>
+    <circle cx="33" cy="22" r="9" fill="none" stroke="#1C3A2E" stroke-width="2"/>
+    <circle cx="33" cy="42" r="9" fill="none" stroke="#1C3A2E" stroke-width="2"/>
+    <circle cx="33" cy="62" r="9" fill="none" stroke="#1C3A2E" stroke-width="2"/>
+  </svg>
+  <div class="ph"><div class="ph-inner">
+    <div class="ph-left">
+      <svg class="logo" width="32" height="42" viewBox="0 0 66 84" fill="none">
+        <rect x="4" y="0" width="58" height="76" rx="8" fill="#3D7A5F"/>
+        <rect x="4" y="0" width="58" height="6" rx="4" fill="#B8924A"/>
+        <rect x="4" y="4" width="58" height="4" fill="#B8924A"/>
+        <circle cx="33" cy="22" r="9" fill="none" stroke="#B8924A" stroke-width="2.5"/>
+        <circle cx="33" cy="22" r="4" fill="#3D7A5F"/>
+        <circle cx="33" cy="42" r="9" fill="none" stroke="#F5EDD8" stroke-width="2" opacity="0.8"/>
+        <circle cx="33" cy="42" r="4" fill="#3D7A5F"/>
+        <circle cx="33" cy="62" r="9" fill="none" stroke="#B8924A" stroke-width="2.5" opacity="0.5"/>
+        <circle cx="33" cy="62" r="4" fill="#3D7A5F"/>
+      </svg>
+      <div class="ph-wm"><div class="the">THE</div><div class="disc">DISCARD</div></div>
+    </div>
+    <div class="ph-right">
+      <div class="ph-title">Advanced Mahjong Reference</div>
+      <div class="ph-sub">Page 4 of 6 &nbsp;·&nbsp; Table Dynamics</div>
+    </div>
+  </div></div>
+
+  <div class="pb">
+
+    <div>
+      <div class="sl">Wind Seats & Seating — Positions rotate each round</div>
+      <div class="table-diagram-wrap">
+        <svg width="210" height="210" viewBox="0 0 210 210" fill="none" style="flex-shrink:0;">
+          <rect x="60" y="60" width="90" height="90" rx="10" fill="#1C3A2E" opacity="0.07" stroke="#B8924A" stroke-width="1.5" stroke-dasharray="4 3"/>
+          <text x="105" y="110" text-anchor="middle" font-family="Montserrat,sans-serif" font-size="9.5" fill="#B8924A" opacity="0.4">TABLE</text>
+          <rect x="158" y="80" width="48" height="50" rx="8" fill="#1C3A2E"/>
+          <text x="182" y="101" text-anchor="middle" font-family="Montserrat,sans-serif" font-weight="800" font-size="11" fill="#F5EDD8">EAST</text>
+          <text x="182" y="115" text-anchor="middle" font-family="Montserrat,sans-serif" font-size="9" fill="#B8924A">DEALER 東</text>
+          <rect x="80" y="158" width="50" height="48" rx="8" fill="#3D7A5F"/>
+          <text x="105" y="180" text-anchor="middle" font-family="Montserrat,sans-serif" font-weight="800" font-size="11" fill="#F5EDD8">SOUTH</text>
+          <text x="105" y="194" text-anchor="middle" font-family="Montserrat,sans-serif" font-size="9" fill="rgba(245,237,216,0.55)">南 · 2nd</text>
+          <rect x="4" y="80" width="48" height="50" rx="8" fill="#3D7A5F"/>
+          <text x="28" y="101" text-anchor="middle" font-family="Montserrat,sans-serif" font-weight="800" font-size="11" fill="#F5EDD8">WEST</text>
+          <text x="28" y="115" text-anchor="middle" font-family="Montserrat,sans-serif" font-size="9" fill="rgba(245,237,216,0.55)">西 · 4th</text>
+          <rect x="80" y="4" width="50" height="48" rx="8" fill="#3D7A5F"/>
+          <text x="105" y="26" text-anchor="middle" font-family="Montserrat,sans-serif" font-weight="800" font-size="11" fill="#F5EDD8">NORTH</text>
+          <text x="105" y="40" text-anchor="middle" font-family="Montserrat,sans-serif" font-size="9" fill="rgba(245,237,216,0.55)">北 · 3rd</text>
+          <path d="M 158 120 Q 148 150 130 158" stroke="#B8924A" stroke-width="1.5" fill="none" stroke-dasharray="3 2" marker-end="url(#a4)"/>
+          <path d="M 80 182 Q 52 175 52 158" stroke="#B8924A" stroke-width="1.5" fill="none" stroke-dasharray="3 2" marker-end="url(#a4)"/>
+          <path d="M 28 80 Q 26 44 80 26" stroke="#B8924A" stroke-width="1.5" fill="none" stroke-dasharray="3 2" marker-end="url(#a4)"/>
+          <path d="M 130 12 Q 164 16 168 80" stroke="#B8924A" stroke-width="1.5" fill="none" stroke-dasharray="3 2" marker-end="url(#a4)"/>
+          <defs><marker id="a4" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto"><path d="M0,0 L0,6 L6,3 z" fill="#B8924A" opacity="0.7"/></marker></defs>
+        </svg>
+        <div style="display:flex;flex-direction:column;gap:10px;">
+          <div class="note-box">
+            <strong>Turn order:</strong> East (Dealer) → South → West → North → East. East starts with 14 tiles and discards first; all others begin with 13.
+          </div>
+          <div class="note-box">
+            <strong>Seat Wind vs. Round Wind:</strong> Your Seat Wind is your current position. The Round Wind is the prevailing wind for the entire round — East during the East Round, South during the South Round. A Pung of your seat wind = +1 Fan/Han. A Pung of the round wind = another +1 Fan/Han. When you're East in the East Round, one Pung of East earns both — 2 Fan/Han from a single set.
+          </div>
+          <div class="note-box">
+            <strong>Round structure:</strong> One East Round = each player serves as dealer once. A South Round follows. A full game is East + South Rounds minimum; some groups play all four wind rounds.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="sl">Dealer Rotation — When the deal passes and when it stays</div>
+      <div class="rotation-grid">
+        <div class="rot-card">
+          <div class="rot-title">Hong Kong Style <span class="rb rb-hk">HK</span></div>
+          <div class="rot-body"><strong>East wins → East stays.</strong> A bonus counter is added. When a non-East player wins, all players rotate one seat counter-clockwise — the player who was South becomes the new East. Counter resets.</div>
+        </div>
+        <div class="rot-card riichi">
+          <div class="rot-title">Japanese Riichi <span class="rb rb-r">Riichi</span></div>
+          <div class="rot-body"><strong>Dealer wins or is in tenpai on an exhaustive draw → Dealer stays</strong>, honba counter +1. Each honba adds 300 extra points to the next winning hand. If dealer neither wins nor is in tenpai, the deal passes.</div>
+        </div>
+        <div class="rot-card american">
+          <div class="rot-title">American NMJL <span class="rb rb-a">American</span></div>
+          <div class="rot-body">Deal passes to the right after <strong>every hand</strong>, regardless of who wins. No dealer-retention rule. The Charleston happens at the start of every new deal.</div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="sl">Waiting, Declaring & Penalties</div>
+      <div class="tenpai-block">
+        <div>
+          <div class="tp-term">Tenpai 聴牌 <span class="rb rb-u" style="background:rgba(245,237,216,0.12);color:var(--cream);">Universal</span></div>
+          <div class="tp-body">One tile away from winning. When the wall runs out, players in tenpai typically avoid penalties. Declare your tiles face-up to prove tenpai when required by the rules.</div>
+        </div>
+        <div>
+          <div class="tp-term">Riichi 立直 <span class="rb rb-r" style="background:rgba(245,237,216,0.12);color:var(--cream);border:1px solid rgba(245,237,216,0.2);">Riichi Only</span></div>
+          <div class="tp-body">Declare tenpai with a <strong>closed hand</strong>. Place 1,000 points on the table, discard face-down, and lock your hand — no more changes. Win for <strong>+1 Han</strong>. Unclaimed Riichi bets carry to the next winner.</div>
+        </div>
+        <div>
+          <div class="tp-term">Furiten 振聴 <span class="rb rb-r" style="background:rgba(245,237,216,0.12);color:var(--cream);border:1px solid rgba(245,237,216,0.2);">Riichi Only</span></div>
+          <div class="tp-body">If any of your winning tiles appears in <strong>your own discard pile</strong>, you cannot win by claiming a discard — only by self-draw. Furiten clears when you discard a tile that changes your wait.</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="pf">
+    <p>The Discard &nbsp;·&nbsp; thediscardnewsletter.substack.com &nbsp;·&nbsp; Free to share</p>
+    <div class="pn">4 / 6</div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════ PAGE 5 · DEFENSE & SPECIAL HANDS ═══════════════════════════════ -->
+<div class="page">
+  <svg class="wm" width="280" height="360" viewBox="0 0 66 84" fill="none">
+    <rect x="4" y="0" width="58" height="76" rx="8" fill="#1C3A2E"/>
+    <circle cx="33" cy="22" r="9" fill="none" stroke="#1C3A2E" stroke-width="2"/>
+    <circle cx="33" cy="42" r="9" fill="none" stroke="#1C3A2E" stroke-width="2"/>
+    <circle cx="33" cy="62" r="9" fill="none" stroke="#1C3A2E" stroke-width="2"/>
+  </svg>
+  <div class="ph"><div class="ph-inner">
+    <div class="ph-left">
+      <svg class="logo" width="32" height="42" viewBox="0 0 66 84" fill="none">
+        <rect x="4" y="0" width="58" height="76" rx="8" fill="#3D7A5F"/>
+        <rect x="4" y="0" width="58" height="6" rx="4" fill="#B8924A"/>
+        <rect x="4" y="4" width="58" height="4" fill="#B8924A"/>
+        <circle cx="33" cy="22" r="9" fill="none" stroke="#B8924A" stroke-width="2.5"/>
+        <circle cx="33" cy="22" r="4" fill="#3D7A5F"/>
+        <circle cx="33" cy="42" r="9" fill="none" stroke="#F5EDD8" stroke-width="2" opacity="0.8"/>
+        <circle cx="33" cy="42" r="4" fill="#3D7A5F"/>
+        <circle cx="33" cy="62" r="9" fill="none" stroke="#B8924A" stroke-width="2.5" opacity="0.5"/>
+        <circle cx="33" cy="62" r="4" fill="#3D7A5F"/>
+      </svg>
+      <div class="ph-wm"><div class="the">THE</div><div class="disc">DISCARD</div></div>
+    </div>
+    <div class="ph-right">
+      <div class="ph-title">Advanced Mahjong Reference</div>
+      <div class="ph-sub">Page 5 of 6 &nbsp;·&nbsp; Defense & Special Hands</div>
+    </div>
+  </div></div>
+
+  <div class="pb">
+
+    <div>
+      <div class="sl">Reading the Discard Pile — Basic defensive awareness</div>
+      <div class="def-grid">
+        <div class="def-card safe">
+          <div class="def-title">Safer Discard Choices</div>
+          <ul class="def-list">
+            <li><strong>Genbutsu:</strong> any tile already in a player's own discard pile is 100% safe against them. <span class="rb rb-r">Riichi</span></li>
+            <li><strong>Suji:</strong> if a player discarded a 4, then 1 and 7 are likely safe — they can't be the center of a 2-3-4 or 4-5-6 wait that needs that 4.</li>
+            <li><strong>Terminals and honors</strong> discarded early — often safer late-game since they're hard to build sequences with.</li>
+            <li><strong>Tiles discarded by multiple players</strong> — the more copies visible, the fewer waiting hands need them.</li>
+          </ul>
+        </div>
+        <div class="def-card danger">
+          <div class="def-title">Dangerous Discard Choices</div>
+          <ul class="def-list">
+            <li><strong>Middle tiles (4, 5, 6)</strong> complete the most possible sequences — most dangerous to throw late in a round.</li>
+            <li><strong>Tiles unseen in any discard</strong> — still live in many hands and wallets.</li>
+            <li><strong>Tiles that complete both a sequence and a triplet</strong> — dual-use tiles carry double the risk.</li>
+            <li>After a <strong>Riichi declaration</strong>, study that player's discard history before throwing — they can win off anything in their wait.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="sl">Special & High-Value Hands — Know these before they surprise you</div>
+      <table class="hands-table">
+        <thead>
+          <tr>
+            <th style="width:18%">Hand Name</th>
+            <th style="width:16%">Chinese / Japanese</th>
+            <th>What It Requires</th>
+            <th style="width:13%">Value</th>
+            <th style="width:18%">Ruleset</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="hand-name">All Pungs</td>
+            <td class="hand-zh">碰碰胡 / Toitoi</td>
+            <td>Four Pungs (or Kongs) + one Pair. No Chows.</td>
+            <td class="hand-val">+3 fan / 2 han</td>
+            <td><span class="rb rb-u">Universal</span></td>
+          </tr>
+          <tr>
+            <td class="hand-name">Seven Pairs</td>
+            <td class="hand-zh">七對子 / Chiitoitsu</td>
+            <td>Seven different pairs — all 14 tiles paired, all distinct. No Pungs allowed.</td>
+            <td class="hand-val">2 han</td>
+            <td><span class="rb rb-r">Riichi</span> <span class="rb rb-hk">HK</span></td>
+          </tr>
+          <tr>
+            <td class="hand-name">Pure Flush</td>
+            <td class="hand-zh">清一色 / Chinitsu</td>
+            <td>Entire hand in one suit only. No honor tiles. Any combination of sets.</td>
+            <td class="hand-val">+7 fan / 6 han</td>
+            <td><span class="rb rb-u">Universal</span></td>
+          </tr>
+          <tr>
+            <td class="hand-name">All Honors</td>
+            <td class="hand-zh">字一色 / Tsuiisou</td>
+            <td>Only Wind and Dragon tiles. Four Pungs + one Pair of honor tiles.</td>
+            <td class="hand-val">Yakuman</td>
+            <td><span class="rb rb-r">Riichi</span> <span class="rb rb-hk">HK</span></td>
+          </tr>
+          <tr class="yakuman">
+            <td class="hand-name">Thirteen Orphans</td>
+            <td class="hand-zh">国士無双 / Kokushi</td>
+            <td>One each of 1m 9m 1p 9p 1s 9s + all 7 honor tiles + one duplicate of any of those 13.</td>
+            <td class="hand-val">Yakuman</td>
+            <td><span class="rb rb-r">Riichi</span> <span class="rb rb-v">Some HK</span></td>
+          </tr>
+          <tr class="yakuman">
+            <td class="hand-name">Nine Gates</td>
+            <td class="hand-zh">九蓮宝燈 / Chuuren</td>
+            <td>Pure one-suit hand of 1-1-1-2-3-4-5-6-7-8-9-9-9 plus any one tile from that same suit.</td>
+            <td class="hand-val">Yakuman</td>
+            <td><span class="rb rb-r">Riichi</span></td>
+          </tr>
+          <tr class="yakuman">
+            <td class="hand-name">Big Four Winds</td>
+            <td class="hand-zh">大四喜 / Daisuushii</td>
+            <td>Pungs of all four winds (East, South, West, North) plus any Pair.</td>
+            <td class="hand-val">Yakuman</td>
+            <td><span class="rb rb-r">Riichi</span> <span class="rb rb-hk">HK</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout">
+      <div class="cl">On Yakuman</div>
+      Yakuman hands are the rarest and highest-scoring in Japanese Riichi — equivalent to 13 han (32,000 points for a non-dealer win). They're named, celebrated, and sometimes photographed. In competitive play, some Yakuman hands count as double Yakuman. <strong>If you ever build one, show everyone at the table before revealing.</strong>
+    </div>
+
+  </div>
+
+  <div class="pf">
+    <p>The Discard &nbsp;·&nbsp; thediscardnewsletter.substack.com &nbsp;·&nbsp; Free to share</p>
+    <div class="pn">5 / 6</div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════ PAGE 6 · GLOSSARY ═══════════════════════════════ -->
+<div class="page">
+  <svg class="wm" width="280" height="360" viewBox="0 0 66 84" fill="none">
+    <rect x="4" y="0" width="58" height="76" rx="8" fill="#1C3A2E"/>
+    <circle cx="33" cy="22" r="9" fill="none" stroke="#1C3A2E" stroke-width="2"/>
+    <circle cx="33" cy="42" r="9" fill="none" stroke="#1C3A2E" stroke-width="2"/>
+    <circle cx="33" cy="62" r="9" fill="none" stroke="#1C3A2E" stroke-width="2"/>
+  </svg>
+  <div class="ph"><div class="ph-inner">
+    <div class="ph-left">
+      <svg class="logo" width="32" height="42" viewBox="0 0 66 84" fill="none">
+        <rect x="4" y="0" width="58" height="76" rx="8" fill="#3D7A5F"/>
+        <rect x="4" y="0" width="58" height="6" rx="4" fill="#B8924A"/>
+        <rect x="4" y="4" width="58" height="4" fill="#B8924A"/>
+        <circle cx="33" cy="22" r="9" fill="none" stroke="#B8924A" stroke-width="2.5"/>
+        <circle cx="33" cy="22" r="4" fill="#3D7A5F"/>
+        <circle cx="33" cy="42" r="9" fill="none" stroke="#F5EDD8" stroke-width="2" opacity="0.8"/>
+        <circle cx="33" cy="42" r="4" fill="#3D7A5F"/>
+        <circle cx="33" cy="62" r="9" fill="none" stroke="#B8924A" stroke-width="2.5" opacity="0.5"/>
+        <circle cx="33" cy="62" r="4" fill="#3D7A5F"/>
+      </svg>
+      <div class="ph-wm"><div class="the">THE</div><div class="disc">DISCARD</div></div>
+    </div>
+    <div class="ph-right">
+      <div class="ph-title">Advanced Mahjong Reference</div>
+      <div class="ph-sub">Page 6 of 6 &nbsp;·&nbsp; Advanced Glossary</div>
+    </div>
+  </div></div>
+
+  <div class="pb">
+
+    <div>
+      <div class="sl">Advanced Glossary — Key terms beyond the basics · <span style="font-weight:400;color:var(--forest);text-transform:none;letter-spacing:0;">dark green = Riichi-specific</span></div>
+      <div class="gloss">
+        <div class="gi"><span class="gt">Tenpai</span><span class="gd">One tile away from winning. Declare face-up at exhaustive draw to avoid penalties.</span></div>
+        <div class="gi"><span class="gt r">Yaku</span><span class="gd">A required scoring pattern in Riichi. No yaku = no win, even with a complete hand.</span></div>
+        <div class="gi"><span class="gt">Kong / Kan</span><span class="gd">A set of four identical tiles. Draw one bonus tile from the dead wall after any Kong.</span></div>
+        <div class="gi"><span class="gt r">Dora</span><span class="gd">Bonus tile adding +1 han per copy in hand. Cannot substitute for a Yaku.</span></div>
+        <div class="gi"><span class="gt r">Ura Dora</span><span class="gd">Hidden dora revealed only when a Riichi winner wins. Often flips the final score.</span></div>
+        <div class="gi"><span class="gt r">Furiten</span><span class="gd">Penalty state: your discard pile contains one of your winning tiles. Cannot win off discards.</span></div>
+        <div class="gi"><span class="gt r">Ippatsu</span><span class="gd">Win within one full turn cycle of declaring Riichi for +1 han bonus.</span></div>
+        <div class="gi"><span class="gt r">Tsumo / Ron</span><span class="gd">Tsumo = self-draw win. Ron = win by claiming a discard. Both are distinct Yaku in Riichi.</span></div>
+        <div class="gi"><span class="gt r">Houjuu</span><span class="gd">Dealing into someone's winning hand. In Riichi, the discarder pays the full penalty alone.</span></div>
+        <div class="gi"><span class="gt r">Han / Fu</span><span class="gd">Han = scoring units from yaku + dora. Fu = sub-unit based on hand structure. Together they determine points.</span></div>
+        <div class="gi"><span class="gt r">Mangan</span><span class="gd">5-han threshold in Riichi (8,000 pts non-dealer). Eliminates fu calculation at this level and above.</span></div>
+        <div class="gi"><span class="gt r">Yakuman</span><span class="gd">Maximum-scoring special hand in Riichi — 32,000 pts non-dealer. Equivalent to 13+ han.</span></div>
+        <div class="gi"><span class="gt">Dead Wall</span><span class="gd">Last 14 tiles in the wall (Riichi). Reserved for Kan bonus draws and Dora indicator flips.</span></div>
+        <div class="gi"><span class="gt r">Suji</span><span class="gd">Defensive logic: if 4 is discarded, then 1 and 7 are likely safe (can't be the center of a wait that needs that 4).</span></div>
+        <div class="gi"><span class="gt r">Genbutsu</span><span class="gd">Any tile already in a player's own discard pile — 100% safe against that player in Riichi.</span></div>
+        <div class="gi"><span class="gt r">Chankan</span><span class="gd">Claiming an Added Kong tile to win before the Kong-declarer draws their bonus tile. Rare and dramatic.</span></div>
+        <div class="gi"><span class="gt r">Honba</span><span class="gd">Dealer counter in Riichi. Each honba adds 300 pts to the next winning hand; accumulates on dealer stays.</span></div>
+        <div class="gi"><span class="gt">Round Wind</span><span class="gd">The prevailing wind for the current round. East during East Round, South during South Round. Pung of it scores bonus.</span></div>
+        <div class="gi"><span class="gt">Seat Wind</span><span class="gd">Your current position's wind (East/South/West/North). Changes each time the deal passes to you.</span></div>
+        <div class="gi"><span class="gt">Fan 番</span><span class="gd">Scoring unit in Hong Kong Mahjong. Patterns are additive; Fan then doubles the base point value.</span></div>
+      </div>
+    </div>
+
+    <div class="cta">
+      <div class="cta-left">
+        <div class="cta-label">Dig deeper every week</div>
+        <div class="cta-main">The Discard — strategy, culture, and deep cuts for serious players.</div>
+        <div class="cta-sub">Free and paid tiers available. Advanced content, live sessions, and more.</div>
+      </div>
+      <div class="cta-url">Subscribe free<br>thediscardnewsletter<br>.substack.com</div>
+    </div>
+
+  </div>
+
+  <div class="pf">
+    <p>The Discard &nbsp;·&nbsp; thediscardnewsletter.substack.com &nbsp;·&nbsp; Free to share</p>
+    <div class="pn">6 / 6</div>
+  </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Discard — Mahjong Cheat Sheet</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Montserrat:wght@300;400;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --jade: #3D7A5F;
+      --forest: #1C3A2E;
+      --cream: #F5EDD8;
+      --terra: #C4623A;
+      --gold: #B8924A;
+      --white: #ffffff;
+      --rule: #E0D8C8;
+      --light: #F9F5EC;
+      --text: #2A2A2A;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Inter', sans-serif; background: #C4BEB4; color: var(--text); line-height: 1.6; }
+
+    /* ── SCREEN BAR ── */
+    .screen-bar {
+      background: var(--forest); color: var(--cream);
+      padding: 14px 32px;
+      display: flex; align-items: center; justify-content: space-between;
+      position: sticky; top: 0; z-index: 100;
+      box-shadow: 0 2px 16px rgba(0,0,0,0.35);
+    }
+    .screen-bar h1 { font-family: 'Playfair Display', serif; font-size: 17px; }
+    .screen-bar p  { font-size: 10px; opacity: 0.45; font-family: 'Montserrat', sans-serif; letter-spacing: 1px; margin-top: 2px; }
+    .print-btn {
+      background: var(--gold); color: white; border: none; cursor: pointer;
+      font-family: 'Montserrat', sans-serif; font-size: 11px; font-weight: 700;
+      letter-spacing: 2px; text-transform: uppercase; padding: 9px 22px; border-radius: 20px;
+    }
+    .print-btn:hover { background: #9A7038; }
+
+    /* ── PAGE ── */
+    .page {
+      width: 8.5in; height: 11in;
+      margin: 28px auto;
+      background: var(--cream);
+      box-shadow: 0 8px 48px rgba(0,0,0,0.28);
+      position: relative; overflow: hidden;
+      display: flex; flex-direction: column;
+    }
+
+    /* watermark */
+    .wm { position: absolute; right: -30px; bottom: -30px; opacity: 0.035; pointer-events: none; }
+
+    /* ── PAGE HEADER ── */
+    .ph { background: var(--forest); border-bottom: 3px solid var(--gold); flex-shrink: 0; }
+    .ph-inner { display: flex; align-items: center; justify-content: space-between; padding: 16px 36px; }
+    .ph-left  { display: flex; align-items: center; gap: 14px; }
+    .ph-wm .the  { font-family:'Montserrat',sans-serif; font-weight:800; font-size:20px; color:var(--cream); letter-spacing:2px; line-height:1; }
+    .ph-wm .disc { font-family:'Montserrat',sans-serif; font-weight:300; font-size:17px; color:var(--gold);  letter-spacing:6px; line-height:1; }
+    .ph-right { text-align: right; }
+    .ph-title { font-family:'Playfair Display',serif; font-size:17px; color:var(--cream); }
+    .ph-sub   { font-family:'Montserrat',sans-serif; font-size:8.5px; letter-spacing:2px; text-transform:uppercase; color:var(--gold); margin-top:3px; }
+
+    /* ── PAGE BODY ── */
+    .pb { padding: 32px 40px 24px; flex: 1; display: flex; flex-direction: column; gap: 24px; }
+
+    /* ── PAGE FOOTER ── */
+    .pf {
+      background: var(--forest); border-top: 2px solid var(--gold);
+      padding: 9px 36px;
+      display: flex; justify-content: space-between; align-items: center; flex-shrink: 0;
+    }
+    .pf p  { font-family:'Montserrat',sans-serif; font-size:9px; color:var(--cream); opacity:0.38; letter-spacing:1px; }
+    .pf .pn { font-family:'Montserrat',sans-serif; font-weight:800; font-size:11px; color:var(--gold); }
+
+    /* ── SECTION LABEL ── */
+    .sl {
+      font-family:'Montserrat',sans-serif; font-size:9px; font-weight:800;
+      letter-spacing:3px; text-transform:uppercase; color:var(--gold);
+      display:flex; align-items:center; gap:12px; margin-bottom:12px;
+    }
+    .sl::after { content:''; flex:1; height:1px; background:var(--gold); opacity:0.25; }
+
+    /* ── TILES ── */
+    .suits-grid  { display:grid; grid-template-columns:1fr 1fr 1fr; gap:18px; }
+    .honor-grid  { display:grid; grid-template-columns:1fr 1fr; gap:18px; }
+
+    .suit-card {
+      background:var(--white); border-radius:12px; padding:20px 22px;
+      border-top:4px solid var(--jade);
+    }
+    .suit-card.bam { border-top-color:var(--jade); }
+    .suit-card.cir { border-top-color:#5BAE8A; }
+    .suit-card.chr { border-top-color:var(--forest); }
+    .suit-card.wnd { border-top-color:var(--terra); }
+    .suit-card.drg { border-top-color:var(--gold); }
+
+    .suit-name { font-family:'Montserrat',sans-serif; font-weight:800; font-size:14px; color:var(--forest); }
+    .suit-aka  { font-size:10px; color:#AAA; margin:3px 0 14px; font-style:italic; }
+
+    .tile-row { display:flex; gap:5px; flex-wrap:wrap; margin-bottom:12px; }
+
+    .t {
+      width:36px; height:46px;
+      background:var(--white); border:1.5px solid #D5CCC0; border-radius:5px;
+      display:flex; align-items:center; justify-content:center;
+      font-size:21px; position:relative; flex-shrink:0;
+      box-shadow:0 2px 6px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.9);
+    }
+    .t .n { position:absolute; bottom:1px; right:2px; font-size:7px; font-family:'Montserrat',sans-serif; font-weight:700; color:#CCC; line-height:1; }
+    .t-lg { width:48px; height:60px; font-size:28px; }
+    .t-xl { width:56px; height:72px; font-size:34px; }
+
+    .suit-note { font-size:11px; color:#777; line-height:1.65; border-top:1px solid #EEE; padding-top:10px; }
+    .suit-note strong { color:var(--forest); }
+
+    .honor-row   { display:flex; gap:14px; flex-wrap:wrap; margin-bottom:12px; }
+    .honor-group { display:flex; flex-direction:column; align-items:center; gap:4px; }
+    .honor-lbl   { font-size:9px; color:#999; font-family:'Montserrat',sans-serif; font-weight:600; text-align:center; }
+
+    /* ── SET CARDS ── */
+    .sets-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:18px; }
+
+    .set-card {
+      background:var(--white); border-radius:12px; padding:22px 20px 24px;
+      border-bottom:4px solid var(--jade);
+    }
+    .set-card.chow { border-bottom-color:#5BAE8A; }
+    .set-card.pair { border-bottom-color:var(--terra); }
+
+    .set-name { font-family:'Montserrat',sans-serif; font-weight:800; font-size:18px; color:var(--forest); line-height:1; }
+    .set-zh   { font-size:10px; color:#BBB; margin:4px 0 14px; }
+    .set-tiles{ display:flex; gap:6px; margin-bottom:14px; flex-wrap:wrap; }
+    .set-def  { font-size:11.5px; color:#555; line-height:1.75; }
+    .set-def strong { color:var(--forest); }
+
+    /* ── WINNING FORMULA ── */
+    .formula {
+      background:var(--forest); border-radius:14px; padding:28px 36px;
+      display:flex; align-items:center;
+    }
+    .fb { text-align:center; padding:0 22px; }
+    .fb .big { font-family:'Playfair Display',serif; font-size:60px; font-weight:900; color:var(--cream); line-height:1; }
+    .fb .lbl { font-family:'Montserrat',sans-serif; font-size:9px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--gold); margin-top:6px; }
+    .fop { font-size:36px; color:var(--gold); opacity:0.4; padding:0 6px; font-weight:300; }
+    .fr .big { color:var(--gold); }
+    .fnote { flex:1; margin-left:24px; padding-left:24px; border-left:1px solid rgba(245,237,216,0.12); font-size:11.5px; color:rgba(245,237,216,0.65); line-height:2.1; }
+    .fnote strong { color:var(--cream); }
+
+    /* ── FLOW ── */
+    .flow-wrap { background:var(--white); border:1px solid var(--rule); border-radius:12px; padding:28px 30px; }
+    .flow { display:flex; align-items:flex-start; gap:0; }
+    .flow-step { flex:1; text-align:center; position:relative; padding:0 10px; }
+    .flow-step:not(:last-child)::after {
+      content:'→'; position:absolute; right:-10px; top:16px;
+      font-size:22px; color:var(--gold); opacity:0.45;
+    }
+    .flow-num {
+      width:40px; height:40px; background:var(--jade); color:white;
+      border-radius:50%; display:flex; align-items:center; justify-content:center;
+      font-family:'Montserrat',sans-serif; font-weight:800; font-size:15px;
+      margin:0 auto 12px;
+    }
+    .flow-name { font-family:'Montserrat',sans-serif; font-weight:800; font-size:12px; color:var(--forest); margin-bottom:6px; }
+    .flow-desc { font-size:11px; color:#666; line-height:1.65; }
+
+    /* ── CLAIM RULES ── */
+    .claim-list { list-style:none; display:flex; flex-direction:column; gap:10px; }
+    .claim-item {
+      display:flex; gap:14px; align-items:flex-start;
+      background:var(--white); border-radius:10px; padding:14px 18px;
+      border-left:4px solid var(--jade);
+    }
+    .claim-item.high { border-left-color:var(--forest); }
+    .claim-item.med  { border-left-color:var(--jade); }
+    .claim-item.low  { border-left-color:var(--gold); }
+    .claim-badge {
+      font-family:'Montserrat',sans-serif; font-weight:800; font-size:10px;
+      color:var(--white); background:var(--jade); padding:3px 10px;
+      border-radius:10px; white-space:nowrap; margin-top:1px; flex-shrink:0;
+    }
+    .claim-badge.high { background:var(--forest); }
+    .claim-badge.low  { background:var(--gold); }
+    .claim-text { font-size:11.5px; color:#444; line-height:1.7; }
+    .claim-text strong { color:var(--forest); }
+
+    /* ── GLOSSARY ── */
+    .gloss { display:grid; grid-template-columns:1fr 1fr; gap:0 32px; }
+    .gi { display:flex; gap:10px; align-items:baseline; padding:7px 0; border-bottom:1px solid #EEE8DC; font-size:11.5px; }
+    .gt { font-family:'Montserrat',sans-serif; font-weight:800; font-size:10.5px; color:var(--jade); white-space:nowrap; min-width:70px; }
+    .gd { color:#555; line-height:1.55; }
+
+    /* ── ETIQUETTE ── */
+    .etiq-list { display:flex; flex-direction:column; gap:0; }
+    .ei {
+      display:flex; gap:14px; align-items:flex-start;
+      padding:11px 0; border-bottom:1px solid #EEE8DC;
+      font-size:11.5px; line-height:1.65; color:#444;
+    }
+    .ei:last-child { border-bottom:none; }
+    .dot { width:8px; height:8px; border-radius:50%; background:var(--jade); margin-top:5px; flex-shrink:0; }
+    .dot.g { background:var(--gold); }
+    .dot.t { background:var(--terra); }
+    .ei strong { color:var(--forest); font-weight:700; }
+
+    /* ── CALLOUT ── */
+    .callout {
+      background:var(--forest); border-radius:12px; padding:20px 26px;
+      font-size:12px; color:rgba(245,237,216,0.78); line-height:1.9;
+    }
+    .callout .cl { font-family:'Montserrat',sans-serif; font-size:9px; font-weight:800; letter-spacing:2px; text-transform:uppercase; color:var(--gold); margin-bottom:8px; }
+    .callout strong { color:var(--cream); }
+
+    /* ── NOTE BOX ── */
+    .note-box {
+      background:var(--white); border:1px solid var(--rule); border-radius:10px;
+      padding:16px 20px; font-size:11.5px; color:#555; line-height:1.8;
+    }
+    .note-box strong { color:var(--forest); }
+
+    /* ── CTA ── */
+    .cta {
+      background:var(--jade); border-radius:14px; padding:24px 30px;
+      display:flex; align-items:center; justify-content:space-between; gap:24px;
+      margin-top:auto;
+    }
+    .cta-left .cta-label { font-family:'Montserrat',sans-serif; font-size:9px; font-weight:800; letter-spacing:2px; text-transform:uppercase; color:rgba(245,237,216,0.6); margin-bottom:6px; }
+    .cta-left .cta-main  { font-family:'Playfair Display',serif; font-size:20px; color:var(--cream); line-height:1.4; }
+    .cta-left .cta-sub   { font-size:11px; color:rgba(245,237,216,0.7); margin-top:5px; }
+    .cta-url { font-family:'Montserrat',sans-serif; font-weight:700; font-size:12px; color:var(--cream); letter-spacing:0.5px; white-space:nowrap; border:2px solid rgba(245,237,216,0.35); padding:12px 20px; border-radius:24px; flex-shrink:0; text-align:center; line-height:1.6; }
+
+    /* ── LOGO ── */
+    .logo { display:block; flex-shrink:0; }
+
+    /* ── PRINT ── */
+    @page { size:8.5in 11in; margin:0; }
+    @media print {
+      body { background:white; }
+      .screen-bar { display:none; }
+      .page { margin:0; box-shadow:none; page-break-after:always; break-after:page; }
+      .page:last-child { page-break-after:auto; break-after:auto; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="screen-bar">
+  <div>
+    <h1>The Discard — Beginner's Mahjong Cheat Sheet</h1>
+    <p>4 pages · print double-sided · or save as PDF</p>
+  </div>
+  <button class="print-btn" onclick="window.print()">Print / Save PDF</button>
+</div>
+
+
+<!-- ════════════════════════════════════════════════════════ -->
+<!-- PAGE 1 · THE TILES                                      -->
+<!-- ════════════════════════════════════════════════════════ -->
+<div class="page">
+  <svg class="wm" width="280" height="360" viewBox="0 0 66 84" fill="none">
+    <rect x="4" y="0" width="58" height="76" rx="8" fill="#1C3A2E"/>
+    <circle cx="33" cy="22" r="9" fill="none" stroke="#1C3A2E" stroke-width="2"/>
+    <circle cx="33" cy="42" r="9" fill="none" stroke="#1C3A2E" stroke-width="2"/>
+    <circle cx="33" cy="62" r="9" fill="none" stroke="#1C3A2E" stroke-width="2"/>
+  </svg>
+
+  <div class="ph"><div class="ph-inner">
+    <div class="ph-left">
+      <svg class="logo" width="34" height="44" viewBox="0 0 66 84" fill="none">
+        <rect x="4" y="0" width="58" height="76" rx="8" fill="#3D7A5F"/>
+        <rect x="4" y="0" width="58" height="6" rx="4" fill="#B8924A"/>
+        <rect x="4" y="4" width="58" height="4" fill="#B8924A"/>
+        <circle cx="33" cy="22" r="9" fill="none" stroke="#B8924A" stroke-width="2.5"/>
+        <circle cx="33" cy="22" r="4" fill="#3D7A5F"/>
+        <circle cx="33" cy="42" r="9" fill="none" stroke="#F5EDD8" stroke-width="2" opacity="0.8"/>
+        <circle cx="33" cy="42" r="4" fill="#3D7A5F"/>
+        <circle cx="33" cy="62" r="9" fill="none" stroke="#B8924A" stroke-width="2.5" opacity="0.5"/>
+        <circle cx="33" cy="62" r="4" fill="#3D7A5F"/>
+      </svg>
+      <div class="ph-wm"><div class="the">THE</div><div class="disc">DISCARD</div></div>
+    </div>
+    <div class="ph-right">
+      <div class="ph-title">Beginner's Mahjong Cheat Sheet</div>
+      <div class="ph-sub">Page 1 of 4 &nbsp;·&nbsp; The Tiles</div>
+    </div>
+  </div></div>
+
+  <div class="pb">
+
+    <!-- THREE SUITS -->
+    <div>
+      <div class="sl">The Three Suits — Numbered 1 through 9 · 4 copies of every tile</div>
+      <div class="suits-grid">
+
+        <div class="suit-card chr">
+          <div class="suit-name">Characters</div>
+          <div class="suit-aka">Man · Wan · Cracks</div>
+          <div class="tile-row">
+            <div class="t">🀇<span class="n">1</span></div><div class="t">🀈<span class="n">2</span></div><div class="t">🀉<span class="n">3</span></div>
+            <div class="t">🀊<span class="n">4</span></div><div class="t">🀋<span class="n">5</span></div><div class="t">🀌<span class="n">6</span></div>
+            <div class="t">🀍<span class="n">7</span></div><div class="t">🀎<span class="n">8</span></div><div class="t">🀏<span class="n">9</span></div>
+          </div>
+          <div class="suit-note">Chinese numerals 一–九. The trickiest suit for beginners — the numbers become familiar quickly once you start playing.</div>
+        </div>
+
+        <div class="suit-card bam">
+          <div class="suit-name">Bamboo</div>
+          <div class="suit-aka">Bam · Sticks · Strings</div>
+          <div class="tile-row">
+            <div class="t">🀐<span class="n">1</span></div><div class="t">🀑<span class="n">2</span></div><div class="t">🀒<span class="n">3</span></div>
+            <div class="t">🀓<span class="n">4</span></div><div class="t">🀔<span class="n">5</span></div><div class="t">🀕<span class="n">6</span></div>
+            <div class="t">🀖<span class="n">7</span></div><div class="t">🀗<span class="n">8</span></div><div class="t">🀘<span class="n">9</span></div>
+          </div>
+          <div class="suit-note">Looks like bamboo stalks. <strong>Note:</strong> The 1-Bamboo usually shows a bird instead of one stalk — don't let it surprise you.</div>
+        </div>
+
+        <div class="suit-card cir">
+          <div class="suit-name">Circles</div>
+          <div class="suit-aka">Dots · Balls · Coins</div>
+          <div class="tile-row">
+            <div class="t">🀙<span class="n">1</span></div><div class="t">🀚<span class="n">2</span></div><div class="t">🀛<span class="n">3</span></div>
+            <div class="t">🀜<span class="n">4</span></div><div class="t">🀝<span class="n">5</span></div><div class="t">🀞<span class="n">6</span></div>
+            <div class="t">🀟<span class="n">7</span></div><div class="t">🀠<span class="n">8</span></div><div class="t">🀡<span class="n">9</span></div>
+          </div>
+          <div class="suit-note">Just count the dots. The most beginner-friendly suit. Start here when sorting your hand.</div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- HONOR TILES -->
+    <div>
+      <div class="sl">Honor Tiles — No numbers · Cannot form sequences</div>
+      <div class="honor-grid">
+
+        <div class="suit-card wnd">
+          <div class="suit-name">Wind Tiles</div>
+          <div class="suit-aka">4 winds × 4 copies = 16 tiles</div>
+          <div class="honor-row">
+            <div class="honor-group"><div class="t t-lg">🀀</div><div class="honor-lbl">East 東</div></div>
+            <div class="honor-group"><div class="t t-lg">🀁</div><div class="honor-lbl">South 南</div></div>
+            <div class="honor-group"><div class="t t-lg">🀂</div><div class="honor-lbl">West 西</div></div>
+            <div class="honor-group"><div class="t t-lg">🀃</div><div class="honor-lbl">North 北</div></div>
+          </div>
+          <div class="suit-note">Each player holds a <strong>seat wind</strong> based on their position. East is always the dealer. Three of a kind (a Pung) of your seat wind scores bonus points.</div>
+        </div>
+
+        <div class="suit-card drg">
+          <div class="suit-name">Dragon Tiles</div>
+          <div class="suit-aka">3 dragons × 4 copies = 12 tiles</div>
+          <div class="honor-row">
+            <div class="honor-group"><div class="t t-lg">🀄</div><div class="honor-lbl">Red 中</div></div>
+            <div class="honor-group"><div class="t t-lg">🀅</div><div class="honor-lbl">Green 發</div></div>
+            <div class="honor-group"><div class="t t-lg">🀆</div><div class="honor-lbl">White 白</div></div>
+          </div>
+          <div class="suit-note">Three of any Dragon (a Pung) scores points in most rulesets. Worth chasing if you draw two early — the third is never far away.</div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- QUICK NOTE -->
+    <div class="callout">
+      <div class="cl">One thing to remember</div>
+      A standard set has <strong>144 tiles</strong>. Three numbered suits (Characters, Bamboo, Circles) plus the Wind and Dragon honor tiles. You don't need to memorize everything at once — focus on recognizing the suits first. Everything else clicks into place from there.
+    </div>
+
+  </div>
+
+  <div class="pf">
+    <p>The Discard &nbsp;·&nbsp; thediscardnewsletter.substack.com &nbsp;·&nbsp; Free to share</p>
+    <div class="pn">1 / 4</div>
+  </div>
+</div>
+
+
+<!-- ════════════════════════════════════════════════════════ -->
+<!-- PAGE 2 · WHAT YOU'RE BUILDING                          -->
+<!-- ════════════════════════════════════════════════════════ -->
+<div class="page">
+  <svg class="wm" width="280" height="360" viewBox="0 0 66 84" fill="none">
+    <rect x="4" y="0" width="58" height="76" rx="8" fill="#1C3A2E"/>
+    <circle cx="33" cy="22" r="9" fill="none" stroke="#1C3A2E" stroke-width="2"/>
+    <circle cx="33" cy="42" r="9" fill="none" stroke="#1C3A2E" stroke-width="2"/>
+    <circle cx="33" cy="62" r="9" fill="none" stroke="#1C3A2E" stroke-width="2"/>
+  </svg>
+
+  <div class="ph"><div class="ph-inner">
+    <div class="ph-left">
+      <svg class="logo" width="34" height="44" viewBox="0 0 66 84" fill="none">
+        <rect x="4" y="0" width="58" height="76" rx="8" fill="#3D7A5F"/>
+        <rect x="4" y="0" width="58" height="6" rx="4" fill="#B8924A"/>
+        <rect x="4" y="4" width="58" height="4" fill="#B8924A"/>
+        <circle cx="33" cy="22" r="9" fill="none" stroke="#B8924A" stroke-width="2.5"/>
+        <circle cx="33" cy="22" r="4" fill="#3D7A5F"/>
+        <circle cx="33" cy="42" r="9" fill="none" stroke="#F5EDD8" stroke-width="2" opacity="0.8"/>
+        <circle cx="33" cy="42" r="4" fill="#3D7A5F"/>
+        <circle cx="33" cy="62" r="9" fill="none" stroke="#B8924A" stroke-width="2.5" opacity="0.5"/>
+        <circle cx="33" cy="62" r="4" fill="#3D7A5F"/>
+      </svg>
+      <div class="ph-wm"><div class="the">THE</div><div class="disc">DISCARD</div></div>
+    </div>
+    <div class="ph-right">
+      <div class="ph-title">Beginner's Mahjong Cheat Sheet</div>
+      <div class="ph-sub">Page 2 of 4 &nbsp;·&nbsp; What You're Building</div>
+    </div>
+  </div></div>
+
+  <div class="pb">
+
+    <!-- SETS -->
+    <div>
+      <div class="sl">The Three Main Sets — The building blocks of your hand</div>
+      <div class="sets-grid">
+
+        <div class="set-card">
+          <div class="set-name">Pung</div>
+          <div class="set-zh">碰 · Three of a kind</div>
+          <div class="set-tiles">
+            <div class="t t-xl">🀄</div><div class="t t-xl">🀄</div><div class="t t-xl">🀄</div>
+          </div>
+          <div class="set-def">Three <strong>identical</strong> tiles. Any tile — suit, wind, or dragon. You can take a Pung from <strong>any player's discard</strong>, no matter where you're sitting.</div>
+        </div>
+
+        <div class="set-card chow">
+          <div class="set-name">Chow</div>
+          <div class="set-zh">吃 · Sequence of three</div>
+          <div class="set-tiles">
+            <div class="t t-xl">🀛</div><div class="t t-xl">🀜</div><div class="t t-xl">🀝</div>
+          </div>
+          <div class="set-def">Three <strong>consecutive numbers</strong> in the <strong>same suit</strong>. Honor tiles (Winds, Dragons) cannot form a Chow. In most styles, you claim a Chow only from the player to your left.</div>
+        </div>
+
+        <div class="set-card pair">
+          <div class="set-name">Pair</div>
+          <div class="set-zh">雀 · The "eyes"</div>
+          <div class="set-tiles">
+            <div class="t t-xl">🀡</div><div class="t t-xl">🀡</div>
+          </div>
+          <div class="set-def">Two <strong>identical</strong> tiles. Every winning hand needs exactly <strong>one pair</strong>. Called the "eyes" of the hand. No pair, no win — protect it.</div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- WINNING FORMULA -->
+    <div>
+      <div class="sl">The Winning Hand</div>
+      <div class="formula">
+        <div class="fb"><div class="big">4</div><div class="lbl">Sets<br>Pung or Chow</div></div>
+        <div class="fop">+</div>
+        <div class="fb"><div class="big">1</div><div class="lbl">Pair<br>The Eyes</div></div>
+        <div class="fop">=</div>
+        <div class="fb fr"><div class="big">14</div><div class="lbl">Tiles Total<br>= Mahjong!</div></div>
+        <div class="fnote">
+          Mix Pungs and Chows freely — any combination works.<br>
+          <strong>You win the moment your 14th tile completes the formula</strong> — whether you drew it yourself or claimed it from someone else's discard.<br><br>
+          Note: scoring rules vary by style of Mahjong — but the winning formula above applies to most.
+        </div>
+      </div>
+    </div>
+
+    <!-- BEGINNER TIP -->
+    <div class="callout">
+      <div class="cl">The most common beginner mistake</div>
+      Holding onto tiles that don't connect to anything because they look valuable. A lone Red Dragon is impressive — but without a second one, it's just taking up space. <strong>Keep tiles that connect. Let go of tiles that don't.</strong> The faster you learn to discard isolated tiles, the faster your game improves.
+    </div>
+
+  </div>
+
+  <div class="pf">
+    <p>The Discard &nbsp;·&nbsp; thediscardnewsletter.substack.com &nbsp;·&nbsp; Free to share</p>
+    <div class="pn">2 / 4</div>
+  </div>
+</div>
+
+
+<!-- ════════════════════════════════════════════════════════ -->
+<!-- PAGE 3 · HOW TO PLAY                                    -->
+<!-- ════════════════════════════════════════════════════════ -->
+<div class="page">
+  <svg class="wm" width="280" height="360" viewBox="0 0 66 84" fill="none">
+    <rect x="4" y="0" width="58" height="76" rx="8" fill="#1C3A2E"/>
+    <circle cx="33" cy="22" r="9" fill="none" stroke="#1C3A2E" stroke-width="2"/>
+    <circle cx="33" cy="42" r="9" fill="none" stroke="#1C3A2E" stroke-width="2"/>
+    <circle cx="33" cy="62" r="9" fill="none" stroke="#1C3A2E" stroke-width="2"/>
+  </svg>
+
+  <div class="ph"><div class="ph-inner">
+    <div class="ph-left">
+      <svg class="logo" width="34" height="44" viewBox="0 0 66 84" fill="none">
+        <rect x="4" y="0" width="58" height="76" rx="8" fill="#3D7A5F"/>
+        <rect x="4" y="0" width="58" height="6" rx="4" fill="#B8924A"/>
+        <rect x="4" y="4" width="58" height="4" fill="#B8924A"/>
+        <circle cx="33" cy="22" r="9" fill="none" stroke="#B8924A" stroke-width="2.5"/>
+        <circle cx="33" cy="22" r="4" fill="#3D7A5F"/>
+        <circle cx="33" cy="42" r="9" fill="none" stroke="#F5EDD8" stroke-width="2" opacity="0.8"/>
+        <circle cx="33" cy="42" r="4" fill="#3D7A5F"/>
+        <circle cx="33" cy="62" r="9" fill="none" stroke="#B8924A" stroke-width="2.5" opacity="0.5"/>
+        <circle cx="33" cy="62" r="4" fill="#3D7A5F"/>
+      </svg>
+      <div class="ph-wm"><div class="the">THE</div><div class="disc">DISCARD</div></div>
+    </div>
+    <div class="ph-right">
+      <div class="ph-title">Beginner's Mahjong Cheat Sheet</div>
+      <div class="ph-sub">Page 3 of 4 &nbsp;·&nbsp; How to Play</div>
+    </div>
+  </div></div>
+
+  <div class="pb">
+
+    <!-- ROUND FLOW -->
+    <div>
+      <div class="sl">How a Round Works — Repeat until someone wins or the wall runs out</div>
+      <div class="flow-wrap">
+        <div class="flow">
+          <div class="flow-step">
+            <div class="flow-num">1</div>
+            <div class="flow-name">Draw</div>
+            <div class="flow-desc">Take one tile from the wall. You now hold 14 tiles.</div>
+          </div>
+          <div class="flow-step">
+            <div class="flow-num">2</div>
+            <div class="flow-name">Look</div>
+            <div class="flow-desc">Does this tile complete a set or your pair?</div>
+          </div>
+          <div class="flow-step">
+            <div class="flow-num">3</div>
+            <div class="flow-name">Win or Discard</div>
+            <div class="flow-desc">If you have 4 sets + 1 pair, declare Mahjong. Otherwise, discard your least useful tile.</div>
+          </div>
+          <div class="flow-step">
+            <div class="flow-num">4</div>
+            <div class="flow-name">Claim Window</div>
+            <div class="flow-desc">Before the next draw, any player may claim your discard.</div>
+          </div>
+          <div class="flow-step">
+            <div class="flow-num">5</div>
+            <div class="flow-name">Next Player</div>
+            <div class="flow-desc">If no one claims, play moves clockwise. Repeat from Step 1.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CLAIMING -->
+    <div>
+      <div class="sl">Claiming Someone's Discard — You must act before the next player draws</div>
+      <ul class="claim-list">
+        <li class="claim-item high">
+          <span class="claim-badge high">Win</span>
+          <div class="claim-text"><strong>Any player can claim a discard to win.</strong> If it completes your hand (4 sets + 1 pair), declare Mahjong immediately. This always beats every other type of claim.</div>
+        </li>
+        <li class="claim-item med">
+          <span class="claim-badge">Pung</span>
+          <div class="claim-text"><strong>Any player can claim a discard to complete a Pung.</strong> You need to already hold two of that tile. Show the set face-up, then discard one tile from your hand.</div>
+        </li>
+        <li class="claim-item low">
+          <span class="claim-badge low">Chow</span>
+          <div class="claim-text"><strong>In most styles, only the player to the discarder's left can claim a Chow.</strong> You need the two tiles that complete the sequence. Show the set face-up, then discard.</div>
+        </li>
+      </ul>
+    </div>
+
+    <!-- NOTE -->
+    <div class="note-box">
+      <strong>A note on rules:</strong> Mahjong has several popular styles — Chinese, Hong Kong, Japanese Riichi, and American (NMJL). The basics on this sheet apply to most. Some details (like who can claim a Chow, or how scoring works) vary between them. Always ask your table what style you're playing before you start.
+    </div>
+
+  </div>
+
+  <div class="pf">
+    <p>The Discard &nbsp;·&nbsp; thediscardnewsletter.substack.com &nbsp;·&nbsp; Free to share</p>
+    <div class="pn">3 / 4</div>
+  </div>
+</div>
+
+
+<!-- ════════════════════════════════════════════════════════ -->
+<!-- PAGE 4 · THE TABLE                                      -->
+<!-- ════════════════════════════════════════════════════════ -->
+<div class="page">
+  <svg class="wm" width="280" height="360" viewBox="0 0 66 84" fill="none">
+    <rect x="4" y="0" width="58" height="76" rx="8" fill="#1C3A2E"/>
+    <circle cx="33" cy="22" r="9" fill="none" stroke="#1C3A2E" stroke-width="2"/>
+    <circle cx="33" cy="42" r="9" fill="none" stroke="#1C3A2E" stroke-width="2"/>
+    <circle cx="33" cy="62" r="9" fill="none" stroke="#1C3A2E" stroke-width="2"/>
+  </svg>
+
+  <div class="ph"><div class="ph-inner">
+    <div class="ph-left">
+      <svg class="logo" width="34" height="44" viewBox="0 0 66 84" fill="none">
+        <rect x="4" y="0" width="58" height="76" rx="8" fill="#3D7A5F"/>
+        <rect x="4" y="0" width="58" height="6" rx="4" fill="#B8924A"/>
+        <rect x="4" y="4" width="58" height="4" fill="#B8924A"/>
+        <circle cx="33" cy="22" r="9" fill="none" stroke="#B8924A" stroke-width="2.5"/>
+        <circle cx="33" cy="22" r="4" fill="#3D7A5F"/>
+        <circle cx="33" cy="42" r="9" fill="none" stroke="#F5EDD8" stroke-width="2" opacity="0.8"/>
+        <circle cx="33" cy="42" r="4" fill="#3D7A5F"/>
+        <circle cx="33" cy="62" r="9" fill="none" stroke="#B8924A" stroke-width="2.5" opacity="0.5"/>
+        <circle cx="33" cy="62" r="4" fill="#3D7A5F"/>
+      </svg>
+      <div class="ph-wm"><div class="the">THE</div><div class="disc">DISCARD</div></div>
+    </div>
+    <div class="ph-right">
+      <div class="ph-title">Beginner's Mahjong Cheat Sheet</div>
+      <div class="ph-sub">Page 4 of 4 &nbsp;·&nbsp; Key Terms & Table Etiquette</div>
+    </div>
+  </div></div>
+
+  <div class="pb">
+
+    <!-- GLOSSARY -->
+    <div>
+      <div class="sl">Key Terms — The words you'll hear at the table</div>
+      <div class="gloss">
+        <div class="gi"><span class="gt">Wall</span><span class="gd">The face-down tiles stacked in a rectangle. You draw from here each turn.</span></div>
+        <div class="gi"><span class="gt">Rack</span><span class="gd">The holder that keeps your tiles upright and facing only you.</span></div>
+        <div class="gi"><span class="gt">Draw</span><span class="gd">Taking one tile from the wall on your turn. You then hold 14.</span></div>
+        <div class="gi"><span class="gt">Discard</span><span class="gd">The tile you throw away, placed face-up in the center.</span></div>
+        <div class="gi"><span class="gt">Meld</span><span class="gd">A completed set placed face-up after claiming a discard.</span></div>
+        <div class="gi"><span class="gt">Pung</span><span class="gd">Three identical tiles. Can be claimed from any player's discard.</span></div>
+        <div class="gi"><span class="gt">Chow</span><span class="gd">Three consecutive same-suit tiles. Usually claimed from left neighbor only.</span></div>
+        <div class="gi"><span class="gt">Pair</span><span class="gd">Two identical tiles — the "eyes." Every hand needs exactly one.</span></div>
+        <div class="gi"><span class="gt">Seat Wind</span><span class="gd">Your position's wind tile. Three of a kind may score bonus points.</span></div>
+        <div class="gi"><span class="gt">Self-Draw</span><span class="gd">Winning by drawing your own winning tile from the wall.</span></div>
+        <div class="gi"><span class="gt">Mahjong!</span><span class="gd">What you call when you win. Also: "Hu!" or "Ron!" depending on the style.</span></div>
+        <div class="gi"><span class="gt">Dealer</span><span class="gd">The East player. Deals first, draws 14 tiles to start.</span></div>
+      </div>
+    </div>
+
+    <!-- ETIQUETTE -->
+    <div>
+      <div class="sl">Table Etiquette — The unwritten rules</div>
+      <div class="etiq-list">
+        <div class="ei"><div class="dot"></div><div><strong>Announce your discard out loud.</strong> "Three Bamboo." "West Wind." Every turn. It's standard table manners.</div></div>
+        <div class="ei"><div class="dot t"></div><div><strong>Never touch tiles that aren't yours.</strong> Not to look, not to straighten. Even at casual tables, this is a serious breach.</div></div>
+        <div class="ei"><div class="dot g"></div><div><strong>Claim immediately or not at all.</strong> Once the next player draws from the wall, the window is closed.</div></div>
+        <div class="ei"><div class="dot"></div><div><strong>Don't narrate your hand.</strong> "I almost had that!" tells every other player exactly what you need. Stay quiet.</div></div>
+        <div class="ei"><div class="dot t"></div><div><strong>Tell the table you're new.</strong> "I'm still learning — I might be slow." Most tables are kind once you've set expectations.</div></div>
+        <div class="ei"><div class="dot g"></div><div><strong>Join the shuffle.</strong> When tiles go face-down, all four players mix them — hands flat, in circles. Don't sit it out.</div></div>
+      </div>
+    </div>
+
+    <!-- CTA -->
+    <div class="cta">
+      <div class="cta-left">
+        <div class="cta-label">Want to keep learning?</div>
+        <div class="cta-main">The Discard — a weekly newsletter for Mahjong beginners.</div>
+        <div class="cta-sub">Rules, etiquette, culture, and strategy. New issue every week. Free to start.</div>
+      </div>
+      <div class="cta-url">Subscribe free<br>thediscardnewsletter<br>.substack.com</div>
+    </div>
+
+  </div>
+
+  <div class="pf">
+    <p>The Discard &nbsp;·&nbsp; thediscardnewsletter.substack.com &nbsp;·&nbsp; Free to share</p>
+    <div class="pn">4 / 4</div>
+  </div>
+</div>
+
+</body>
+</html>
